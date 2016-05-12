@@ -7,11 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WJPhotoObj.h"
+#import "WJPhotoPic.h"
 
 @interface WJPhotoBrowser : UIViewController
 @property (assign, nonatomic) NSUInteger sourceIndex;
 @property (strong, nonatomic) NSArray *photos;
+
+@property (assign, nonatomic) BOOL zoomUnderView;
+
 - (void)show;
+
+#pragma mark - private
+@property (assign, nonatomic, readonly) CGAffineTransform windowTransform;
 
 @end

@@ -11,6 +11,7 @@
 #import "WJPhotoBrowser.h"
 #import "WJPhotoView.h"
 #import "WJPhotoToolbar.h"
+#import "WJPhotoBrowserPrivate.h"
 
 static NSString *const cellID = @"com.nius.photo_browser.id";
 
@@ -22,6 +23,8 @@ WJPhotoViewDelegate
     UICollectionView *_collectionView;
     WJPhotoToolbar *_toolbar;
 }
+
+@property (assign, nonatomic, readwrite) CGAffineTransform windowTransform;
 
 @end
 
@@ -36,11 +39,12 @@ WJPhotoViewDelegate
 
 - (void)show {
     NSAssert(_photos.count > 0, @"photos不能为空!");
-    
+
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     [window addSubview:self.view];
     [window.rootViewController addChildViewController:self];
     window.backgroundColor = [UIColor blackColor];
+    _windowTransform = window.transform;
     
     _toolbar.photos = _photos;
     _toolbar.currentIndex = _sourceIndex;
@@ -108,7 +112,7 @@ WJPhotoViewDelegate
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     WJPhotoView *photoView = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
-    WJPhotoObj *photo = _photos[indexPath.item];
+    WJPhotoPic *photo = _photos[indexPath.item];
     photoView.delegate = self;
     photoView.browser = self;
     photoView.photo = photo;

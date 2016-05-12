@@ -12,8 +12,9 @@
 #import "WJTapDetectingImageView.h"
 #import "WJTapDetectingView.h"
 #import "UIImageView+WebCache.h"
-#import "WJPhotoObj.h"
+#import "WJPhotoPic.h"
 #import "WJPhotoBrowser.h"
+#import "MBProgressHUD+WJ.h"
 
 @interface WJPhotoView() <
 UIScrollViewDelegate,
@@ -32,7 +33,6 @@ WJTapDetectingImageViewDelegate
 
 @end
 
-//static CGAffineTransform _originalRootVcTransform;
 @implementation WJPhotoView
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
@@ -86,40 +86,19 @@ WJTapDetectingImageViewDelegate
     [window addSubview:_interruptView];
 }
 
-- (void)setPhoto:(WJPhotoObj *)photo {
+- (void)setPhoto:(WJPhotoPic *)photo {
     _photo = photo;
     
     [self adjustFrame];
     
+    __weak __typeof(self) ws = self;
     UIImage *placeholder = photo.placeholder?photo.placeholder:[self getImageFromView:photo.sourceImageView];
-    NSURL *imgURL = [NSURL URLWithString:_photo.photoURL];
-    if (imgURL) {
-        if ([imgURL isFileReferenceURL]) {
-            UIImage *image = [UIImage imageWithContentsOfFile:imgURL.path];
-            [self setImage:image placeholder:placeholder];
-        } else if ([imgURL.path hasPrefix:@"http"]) {
-            __weak __typeof(self) ws = self;
-            [_photoImageView sd_setImageWithURL:imgURL placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                [ws adjustFrame];
-                [ws setNeedsLayout];
-                [ws setNeedsDisplay];
-                ws.showImage = image;
-            }];
-        } else {
-            UIImage *image = [UIImage imageNamed:imgURL.path];
-            [self setImage:image placeholder:placeholder];
-        }
-    }
-}
-
-- (void)setImage:(UIImage *)image placeholder:(UIImage *)placeholder {
-    self.showImage = image;
-    if (image) {
-        _photoImageView.image = image;
-    } else {
-        _photoImageView.image = placeholder;
-    }
-    [self adjustFrame];
+    [_photoImageView sd_setImageWithURL:[NSURL URLWithString:photo.photoURL] placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+        [ws adjustFrame];
+        [ws setNeedsLayout];
+        [ws setNeedsDisplay];
+        ws.showImage = image;
+    }];
 }
 
 - (void)prepareForReuse {
@@ -129,8 +108,7 @@ WJTapDetectingImageViewDelegate
 
 - (void)saveImage {
     if (!self.showImage) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"图片加载完成后才能保存" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"我知道了", nil];
-        [alert show];
+        [MBProgressHUD showError:@"图片下载完成后才能保存"];
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -140,11 +118,9 @@ WJTapDetectingImageViewDelegate
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     if (error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"保存失败" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"确定", nil];
-        [alert show];
+        [MBProgressHUD showError:@"保存失败"];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"图片已保存" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"好的", nil];
-        [alert show];
+        [MBProgressHUD showSuccess:@"图片已保存"];
     }
 }
 
@@ -188,25 +164,23 @@ WJTapDetectingImageViewDelegate
         
         CGRect sourceRect = [_photo.sourceImageView convertRect:_photo.sourceImageView.bounds toView:nil];
         _photoImageView.frame = sourceRect;
-        //NSLog(@"sourceRect:%@", NSStringFromCGRect(sourceRect));
         
-        UIWindow *window = [self getWindow];
-//        _originalRootVcTransform = CGAffineTransformScale([self topViewController].view.transform, 1.0, 1.0);
-        CGAffineTransform newTransform = CGAffineTransformScale([self getWindow].transform, kRatio, kRatio);
+        CGAffineTransform newTransform = CGAffineTransformScale(self.browser.windowTransform, kRatio, kRatio);
         
         UIImageView *resizeImageView = [[UIImageView alloc] initWithFrame:sourceRect];
         resizeImageView.contentMode = _photo.sourceImageView.contentMode;
         resizeImageView.clipsToBounds = _photo.sourceImageView.clipsToBounds;
         resizeImageView.image = _photo.sourceImageView.image;
-        [window addSubview:resizeImageView];
+        [[self getWindow] addSubview:resizeImageView];
         
         _photo.sourceImageView.hidden = YES;
         [UIView animateWithDuration:WJPhotoViewAnimationDuration animations:^{
             resizeImageView.frame = imageRect;
             _photoImageView.frame = imageRect;
             self.browser.view.alpha = 1.0;
-            
-            [[self topViewController].view setTransform:newTransform];
+            if (self.browser.zoomUnderView) {
+                [[self topViewController].view setTransform:newTransform];
+            }
         } completion:^(BOOL finished) {
             _photo.sourceImageView.hidden = NO;
             [resizeImageView removeFromSuperview];
@@ -283,9 +257,9 @@ WJTapDetectingImageViewDelegate
         self.browser.view.alpha = 0.0;
         _photoImageView.frame = sourceRect;
         resizeImageView.frame = sourceRect;
-        
-//        [[self topViewController].view setTransform:_originalRootVcTransform];
-        [[self topViewController].view setTransform:[self getWindow].transform];
+        if (self.browser.zoomUnderView) {
+            [[self topViewController].view setTransform:self.browser.windowTransform];
+        }
     } completion:^(BOOL finished) {
         [resizeImageView removeFromSuperview];
         if ([self.delegate respondsToSelector:@selector(dismissPhotoBrowser:)]) {
@@ -365,11 +339,14 @@ WJTapDetectingImageViewDelegate
 
 - (CGRect)getSourceRect {
     CGAffineTransform curTransform = [self topViewController].view.transform;
-    //    [[self topViewController].view setTransform:_originalRootVcTransform];
-    [[self topViewController].view setTransform:[self getWindow].transform];
+    if (self.browser.zoomUnderView) {
+        [[self topViewController].view setTransform:self.browser.windowTransform];
+    }
     
     CGRect rect = [_photo.sourceImageView convertRect:_photo.sourceImageView.bounds toView:nil];
-    [[self topViewController].view setTransform:curTransform];
+    if (self.browser.zoomUnderView) {
+        [[self topViewController].view setTransform:curTransform];
+    }
     return rect;
 }
 
