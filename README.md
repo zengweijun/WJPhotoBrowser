@@ -10,7 +10,7 @@
     * [System 【iOS7+】]
 
 ## <a id="如何使用WJPhotoBrowser"></a>如何使用WJPhotoBrowser
-    * cocoapods导入：`pod 'WJPhotoBrowser'` (努力实现中，见谅！)
+    * cocoapods导入：`pod 'WJPhotoBrowser'` 
     * 手动导入：
     * 将`WJPhotoBrowser`文件夹中的所有文件拽入项目中
     * 导入主头文件：`#import "WJPhotoBrowser.h"`
