@@ -12,7 +12,7 @@
 #import "WJTapDetectingImageView.h"
 #import "WJTapDetectingView.h"
 #import "UIImageView+WebCache.h"
-#import "WJPhoto.h"
+#import "WJPhotoObj.h"
 #import "WJPhotoBrowser.h"
 
 @interface WJPhotoView() <
@@ -86,7 +86,7 @@ WJTapDetectingImageViewDelegate
     [window addSubview:_interruptView];
 }
 
-- (void)setPhoto:(WJPhoto *)photo {
+- (void)setPhoto:(WJPhotoObj *)photo {
     _photo = photo;
     
     [self adjustFrame];

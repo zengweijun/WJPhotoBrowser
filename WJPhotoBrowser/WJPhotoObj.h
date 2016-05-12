@@ -1,5 +1,5 @@
 //
-//  WJPhoto.h
+//  WJPhotoObj.h
 //  WJPhotoBrowser
 //
 //  Created by 曾维俊 on 16/2/19.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface WJPhoto : NSObject
+@interface WJPhotoObj : NSObject
 @property (copy, nonatomic) NSString *photoURL; // webURL/fileURL
 
 @property (strong, nonatomic) UIImage *placeholder;
