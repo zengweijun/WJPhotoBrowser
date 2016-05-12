@@ -12,9 +12,9 @@
 #import "WJTapDetectingImageView.h"
 #import "WJTapDetectingView.h"
 #import "UIImageView+WebCache.h"
-#import "WJPhotoPic.h"
+#import "WJPhotoObj.h"
 #import "WJPhotoBrowser.h"
-#import "MBProgressHUD+WJ.h"
+#import "MBProgressHUD.h"
 
 @interface WJPhotoView() <
 UIScrollViewDelegate,
@@ -86,7 +86,7 @@ WJTapDetectingImageViewDelegate
     [window addSubview:_interruptView];
 }
 
-- (void)setPhoto:(WJPhotoPic *)photo {
+- (void)setPhoto:(WJPhotoObj *)photo {
     _photo = photo;
     
     [self adjustFrame];
@@ -108,7 +108,7 @@ WJTapDetectingImageViewDelegate
 
 - (void)saveImage {
     if (!self.showImage) {
-        [MBProgressHUD showError:@"图片下载完成后才能保存"];
+        [self showError:@"图片还没有下载完成!"];
         return;
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -116,11 +116,33 @@ WJTapDetectingImageViewDelegate
     });
 }
 
+- (void)showError:(NSString *)text {
+    UIView *view = [[UIApplication sharedApplication].windows lastObject];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    hud.labelText = text;
+    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[NSString stringWithFormat:@"MBProgressHUD.bundle/%@", @"+++error.png"]]];
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.animationType = MBProgressHUDAnimationZoom;
+    hud.removeFromSuperViewOnHide = YES;
+    [hud hide:YES afterDelay:0.7];
+}
+
+- (void)showSuccess {
+    UIView *view = [[UIApplication sharedApplication].windows lastObject];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
+    hud.labelText = @"图片已保存";
+    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[NSString stringWithFormat:@"MBProgressHUD.bundle/%@", @"+++error.png"]]];
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.animationType = MBProgressHUDAnimationZoom;
+    hud.removeFromSuperViewOnHide = YES;
+    [hud hide:YES afterDelay:0.7];
+}
+
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     if (error) {
-        [MBProgressHUD showError:@"保存失败"];
+        [self showError:@"保存失败"];
     } else {
-        [MBProgressHUD showSuccess:@"图片已保存"];
+        [self showSuccess];
     }
 }
 

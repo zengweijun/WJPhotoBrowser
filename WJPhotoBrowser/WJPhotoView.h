@@ -9,7 +9,7 @@
 #define WJPhotoViewAnimationDuration 0.4
 
 #import <UIKit/UIKit.h>
-@class WJPhotoView, WJPhotoPic, WJPhotoBrowser;
+@class WJPhotoView, WJPhotoObj, WJPhotoBrowser;
 @protocol WJPhotoViewDelegate <NSObject>
 @optional
 - (void)dismissPhotoBrowser:(WJPhotoView *)photoView;
@@ -18,7 +18,7 @@
 @interface WJPhotoView : UICollectionViewCell
 @property (weak, nonatomic) id<WJPhotoViewDelegate> delegate;
 @property (weak, nonatomic) WJPhotoBrowser *browser;
-@property (copy, nonatomic) WJPhotoPic *photo;
+@property (copy, nonatomic) WJPhotoObj *photo;
 
 - (void)saveImage;
 

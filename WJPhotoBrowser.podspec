@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "WJPhotoBrowser"
-  s.version      = "1.1.1"
+  s.version      = "1.1.2"
   s.summary      = "A simple and easy to use image browser."
   s.homepage     = "https://github.com/ZengWeiJun/WJPhotoBrowser"
   s.license      = "MIT"
@@ -13,5 +13,6 @@ Pod::Spec.new do |s|
   s.framework  = "UIKit"
   s.requires_arc = true
   s.dependency 'SDWebImage', '~> 3.7.2'
+  s.dependency 'MBProgressHUD', '~> 0.9.1'
 
 end

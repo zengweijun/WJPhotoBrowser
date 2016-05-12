@@ -112,7 +112,7 @@ WJPhotoViewDelegate
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     WJPhotoView *photoView = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
-    WJPhotoPic *photo = _photos[indexPath.item];
+    WJPhotoObj *photo = _photos[indexPath.item];
     photoView.delegate = self;
     photoView.browser = self;
     photoView.photo = photo;

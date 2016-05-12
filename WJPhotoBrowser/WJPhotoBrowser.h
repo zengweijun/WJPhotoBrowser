@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WJPhotoPic.h"
+#import "WJPhotoObj.h"
 
 @interface WJPhotoBrowser : UIViewController
 @property (assign, nonatomic) NSUInteger sourceIndex;

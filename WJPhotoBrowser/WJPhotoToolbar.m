@@ -7,7 +7,6 @@
 //
 
 #import "WJPhotoToolbar.h"
-#import "WJPhoto.h"
 
 @implementation WJPhotoToolbar {
     UILabel *_indexLabel;

@@ -27,12 +27,15 @@
 		388361A51CE490E5008FC5BC /* save_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 388361951CE490E4008FC5BC /* save_icon@2x.png */; };
 		388361A61CE490E5008FC5BC /* save_icon_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 388361961CE490E4008FC5BC /* save_icon_highlighted.png */; };
 		388361A71CE490E5008FC5BC /* save_icon_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 388361971CE490E4008FC5BC /* save_icon_highlighted@2x.png */; };
-		388361A81CE490E5008FC5BC /* WJPhotoObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 388361991CE490E4008FC5BC /* WJPhotoObj.m */; };
-		388361A91CE490E5008FC5BC /* WJPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 3883619B1CE490E4008FC5BC /* WJPhotoBrowser.m */; };
-		388361AA1CE490E5008FC5BC /* WJPhotoToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3883619D1CE490E4008FC5BC /* WJPhotoToolbar.m */; };
-		388361AB1CE490E5008FC5BC /* WJPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3883619F1CE490E4008FC5BC /* WJPhotoView.m */; };
-		388361AC1CE490E5008FC5BC /* WJTapDetectingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 388361A11CE490E4008FC5BC /* WJTapDetectingImageView.m */; };
-		388361AD1CE490E5008FC5BC /* WJTapDetectingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 388361A31CE490E5008FC5BC /* WJTapDetectingView.m */; };
+		38B2BB5B1CE4AF9300D51C5D /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 38B2BB571CE4AF9300D51C5D /* LICENSE */; };
+		38B2BB5C1CE4AF9300D51C5D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB591CE4AF9300D51C5D /* MBProgressHUD.m */; };
+		38B2BB5D1CE4AF9300D51C5D /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB5A1CE4AF9300D51C5D /* README.mdown */; };
+		38B2BB6B1CE4B1D100D51C5D /* WJPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB5F1CE4B1D100D51C5D /* WJPhotoBrowser.m */; };
+		38B2BB6C1CE4B1D100D51C5D /* WJPhotoObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB621CE4B1D100D51C5D /* WJPhotoObj.m */; };
+		38B2BB6D1CE4B1D100D51C5D /* WJPhotoToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB641CE4B1D100D51C5D /* WJPhotoToolbar.m */; };
+		38B2BB6E1CE4B1D100D51C5D /* WJPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB661CE4B1D100D51C5D /* WJPhotoView.m */; };
+		38B2BB6F1CE4B1D100D51C5D /* WJTapDetectingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB681CE4B1D100D51C5D /* WJTapDetectingImageView.m */; };
+		38B2BB701CE4B1D100D51C5D /* WJTapDetectingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB6A1CE4B1D100D51C5D /* WJTapDetectingView.m */; };
 		38C826571CA11684005F1C05 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C8263B1CA11684005F1C05 /* NSData+ImageContentType.m */; };
 		38C826581CA11684005F1C05 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C8263D1CA11684005F1C05 /* SDImageCache.m */; };
 		38C826591CA11684005F1C05 /* SDWebImageCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = 38C8263F1CA11684005F1C05 /* SDWebImageCompat.m */; };
@@ -108,18 +111,23 @@
 		388361951CE490E4008FC5BC /* save_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "save_icon@2x.png"; sourceTree = "<group>"; };
 		388361961CE490E4008FC5BC /* save_icon_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = save_icon_highlighted.png; sourceTree = "<group>"; };
 		388361971CE490E4008FC5BC /* save_icon_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "save_icon_highlighted@2x.png"; sourceTree = "<group>"; };
-		388361981CE490E4008FC5BC /* WJPhotoObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoObj.h; sourceTree = "<group>"; };
-		388361991CE490E4008FC5BC /* WJPhotoObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJPhotoObj.m; sourceTree = "<group>"; };
-		3883619A1CE490E4008FC5BC /* WJPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoBrowser.h; sourceTree = "<group>"; };
-		3883619B1CE490E4008FC5BC /* WJPhotoBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJPhotoBrowser.m; sourceTree = "<group>"; };
-		3883619C1CE490E4008FC5BC /* WJPhotoToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoToolbar.h; sourceTree = "<group>"; };
-		3883619D1CE490E4008FC5BC /* WJPhotoToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJPhotoToolbar.m; sourceTree = "<group>"; };
-		3883619E1CE490E4008FC5BC /* WJPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoView.h; sourceTree = "<group>"; };
-		3883619F1CE490E4008FC5BC /* WJPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJPhotoView.m; sourceTree = "<group>"; };
-		388361A01CE490E4008FC5BC /* WJTapDetectingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJTapDetectingImageView.h; sourceTree = "<group>"; };
-		388361A11CE490E4008FC5BC /* WJTapDetectingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJTapDetectingImageView.m; sourceTree = "<group>"; };
-		388361A21CE490E5008FC5BC /* WJTapDetectingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJTapDetectingView.h; sourceTree = "<group>"; };
-		388361A31CE490E5008FC5BC /* WJTapDetectingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJTapDetectingView.m; sourceTree = "<group>"; };
+		38B2BB571CE4AF9300D51C5D /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		38B2BB581CE4AF9300D51C5D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		38B2BB591CE4AF9300D51C5D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		38B2BB5A1CE4AF9300D51C5D /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.mdown; sourceTree = "<group>"; };
+		38B2BB5E1CE4B1D100D51C5D /* WJPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoBrowser.h; sourceTree = "<group>"; };
+		38B2BB5F1CE4B1D100D51C5D /* WJPhotoBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJPhotoBrowser.m; sourceTree = "<group>"; };
+		38B2BB601CE4B1D100D51C5D /* WJPhotoBrowserPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoBrowserPrivate.h; sourceTree = "<group>"; };
+		38B2BB611CE4B1D100D51C5D /* WJPhotoObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoObj.h; sourceTree = "<group>"; };
+		38B2BB621CE4B1D100D51C5D /* WJPhotoObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJPhotoObj.m; sourceTree = "<group>"; };
+		38B2BB631CE4B1D100D51C5D /* WJPhotoToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoToolbar.h; sourceTree = "<group>"; };
+		38B2BB641CE4B1D100D51C5D /* WJPhotoToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJPhotoToolbar.m; sourceTree = "<group>"; };
+		38B2BB651CE4B1D100D51C5D /* WJPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJPhotoView.h; sourceTree = "<group>"; };
+		38B2BB661CE4B1D100D51C5D /* WJPhotoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJPhotoView.m; sourceTree = "<group>"; };
+		38B2BB671CE4B1D100D51C5D /* WJTapDetectingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJTapDetectingImageView.h; sourceTree = "<group>"; };
+		38B2BB681CE4B1D100D51C5D /* WJTapDetectingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJTapDetectingImageView.m; sourceTree = "<group>"; };
+		38B2BB691CE4B1D100D51C5D /* WJTapDetectingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WJTapDetectingView.h; sourceTree = "<group>"; };
+		38B2BB6A1CE4B1D100D51C5D /* WJTapDetectingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WJTapDetectingView.m; sourceTree = "<group>"; };
 		38C8263A1CA11684005F1C05 /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
 		38C8263B1CA11684005F1C05 /* NSData+ImageContentType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+ImageContentType.m"; sourceTree = "<group>"; };
 		38C8263C1CA11684005F1C05 /* SDImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageCache.h; sourceTree = "<group>"; };
@@ -199,6 +207,7 @@
 		386B4D7E1C745A550001E95D /* WJPhotoBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				38B2BB561CE4AF9300D51C5D /* MBProgressHUD */,
 				388361921CE490E4008FC5BC /* WJPhotoBrowser */,
 				38C826391CA11684005F1C05 /* SDWebImage */,
 				386B4DB31C745A7C0001E95D /* Images */,
@@ -260,18 +269,19 @@
 			isa = PBXGroup;
 			children = (
 				388361931CE490E4008FC5BC /* images */,
-				388361981CE490E4008FC5BC /* WJPhotoObj.h */,
-				388361991CE490E4008FC5BC /* WJPhotoObj.m */,
-				3883619A1CE490E4008FC5BC /* WJPhotoBrowser.h */,
-				3883619B1CE490E4008FC5BC /* WJPhotoBrowser.m */,
-				3883619C1CE490E4008FC5BC /* WJPhotoToolbar.h */,
-				3883619D1CE490E4008FC5BC /* WJPhotoToolbar.m */,
-				3883619E1CE490E4008FC5BC /* WJPhotoView.h */,
-				3883619F1CE490E4008FC5BC /* WJPhotoView.m */,
-				388361A01CE490E4008FC5BC /* WJTapDetectingImageView.h */,
-				388361A11CE490E4008FC5BC /* WJTapDetectingImageView.m */,
-				388361A21CE490E5008FC5BC /* WJTapDetectingView.h */,
-				388361A31CE490E5008FC5BC /* WJTapDetectingView.m */,
+				38B2BB5E1CE4B1D100D51C5D /* WJPhotoBrowser.h */,
+				38B2BB5F1CE4B1D100D51C5D /* WJPhotoBrowser.m */,
+				38B2BB601CE4B1D100D51C5D /* WJPhotoBrowserPrivate.h */,
+				38B2BB611CE4B1D100D51C5D /* WJPhotoObj.h */,
+				38B2BB621CE4B1D100D51C5D /* WJPhotoObj.m */,
+				38B2BB631CE4B1D100D51C5D /* WJPhotoToolbar.h */,
+				38B2BB641CE4B1D100D51C5D /* WJPhotoToolbar.m */,
+				38B2BB651CE4B1D100D51C5D /* WJPhotoView.h */,
+				38B2BB661CE4B1D100D51C5D /* WJPhotoView.m */,
+				38B2BB671CE4B1D100D51C5D /* WJTapDetectingImageView.h */,
+				38B2BB681CE4B1D100D51C5D /* WJTapDetectingImageView.m */,
+				38B2BB691CE4B1D100D51C5D /* WJTapDetectingView.h */,
+				38B2BB6A1CE4B1D100D51C5D /* WJTapDetectingView.m */,
 			);
 			name = WJPhotoBrowser;
 			path = ../../WJPhotoBrowser;
@@ -286,6 +296,17 @@
 				388361971CE490E4008FC5BC /* save_icon_highlighted@2x.png */,
 			);
 			path = images;
+			sourceTree = "<group>";
+		};
+		38B2BB561CE4AF9300D51C5D /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				38B2BB571CE4AF9300D51C5D /* LICENSE */,
+				38B2BB581CE4AF9300D51C5D /* MBProgressHUD.h */,
+				38B2BB591CE4AF9300D51C5D /* MBProgressHUD.m */,
+				38B2BB5A1CE4AF9300D51C5D /* README.mdown */,
+			);
+			path = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 		38C826391CA11684005F1C05 /* SDWebImage */ = {
@@ -438,6 +459,7 @@
 				3853769E1C76F46500FF8120 /* 4.png in Resources */,
 				386B4D8A1C745A550001E95D /* Main.storyboard in Resources */,
 				3853769F1C76F46500FF8120 /* 5.png in Resources */,
+				38B2BB5B1CE4AF9300D51C5D /* LICENSE in Resources */,
 				3853769D1C76F46500FF8120 /* 3.png in Resources */,
 				388361A51CE490E5008FC5BC /* save_icon@2x.png in Resources */,
 				388361A71CE490E5008FC5BC /* save_icon_highlighted@2x.png in Resources */,
@@ -467,27 +489,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				388361AD1CE490E5008FC5BC /* WJTapDetectingView.m in Sources */,
 				38C826631CA11684005F1C05 /* UIImageView+WebCache.m in Sources */,
-				388361AC1CE490E5008FC5BC /* WJTapDetectingImageView.m in Sources */,
-				388361AB1CE490E5008FC5BC /* WJPhotoView.m in Sources */,
 				38C8265A1CA11684005F1C05 /* SDWebImageDecoder.m in Sources */,
 				38C8265D1CA11684005F1C05 /* SDWebImageManager.m in Sources */,
 				38C826571CA11684005F1C05 /* NSData+ImageContentType.m in Sources */,
+				38B2BB5C1CE4AF9300D51C5D /* MBProgressHUD.m in Sources */,
 				38C826591CA11684005F1C05 /* SDWebImageCompat.m in Sources */,
+				38B2BB6B1CE4B1D100D51C5D /* WJPhotoBrowser.m in Sources */,
+				38B2BB701CE4B1D100D51C5D /* WJTapDetectingView.m in Sources */,
 				38C826641CA11684005F1C05 /* UIView+WebCacheOperation.m in Sources */,
 				38C8265F1CA11684005F1C05 /* UIButton+WebCache.m in Sources */,
-				388361A81CE490E5008FC5BC /* WJPhotoObj.m in Sources */,
+				38B2BB6C1CE4B1D100D51C5D /* WJPhotoObj.m in Sources */,
 				38C8265E1CA11684005F1C05 /* SDWebImagePrefetcher.m in Sources */,
+				38B2BB6D1CE4B1D100D51C5D /* WJPhotoToolbar.m in Sources */,
 				38C8265C1CA11684005F1C05 /* SDWebImageDownloaderOperation.m in Sources */,
 				386B4D871C745A550001E95D /* ViewController.m in Sources */,
-				388361A91CE490E5008FC5BC /* WJPhotoBrowser.m in Sources */,
 				386B4D841C745A550001E95D /* AppDelegate.m in Sources */,
-				388361AA1CE490E5008FC5BC /* WJPhotoToolbar.m in Sources */,
+				38B2BB6F1CE4B1D100D51C5D /* WJTapDetectingImageView.m in Sources */,
 				38C826621CA11684005F1C05 /* UIImageView+HighlightedWebCache.m in Sources */,
+				38B2BB5D1CE4AF9300D51C5D /* README.mdown in Sources */,
 				38C826611CA11684005F1C05 /* UIImage+MultiFormat.m in Sources */,
 				38C826581CA11684005F1C05 /* SDImageCache.m in Sources */,
 				386B4D811C745A550001E95D /* main.m in Sources */,
+				38B2BB6E1CE4B1D100D51C5D /* WJPhotoView.m in Sources */,
 				38C826601CA11684005F1C05 /* UIImage+GIF.m in Sources */,
 				38C8265B1CA11684005F1C05 /* SDWebImageDownloader.m in Sources */,
 			);
