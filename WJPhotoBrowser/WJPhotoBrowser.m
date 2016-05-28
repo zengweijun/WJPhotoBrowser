@@ -17,14 +17,14 @@ static NSString *const cellID = @"com.nius.photo_browser.id";
 
 @interface WJPhotoBrowser () <
 UICollectionViewDataSource,
-UICollectionViewDelegateFlowLayout,
-WJPhotoViewDelegate
-> {
-    UICollectionView *_collectionView;
-    WJPhotoToolbar *_toolbar;
-}
+UICollectionViewDelegateFlowLayout
+>
 
-@property (assign, nonatomic, readwrite) CGAffineTransform windowTransform;
+@property (nonatomic, weak) UICollectionView *collectionView;
+@property (nonatomic, weak) WJPhotoToolbar   *toolbar;
+
+@property (nonatomic, assign) CGAffineTransform windowTransform;
+@property (nonatomic, strong) UIColor *windowColor;
 
 @end
 
@@ -32,22 +32,46 @@ WJPhotoViewDelegate
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        _sourceIndex = 0;
+        _currentIndex = 0;
+        _usePopAnimation = NO;
+        _animatedZoomUnderView = YES;
+        
+        _windowColor = [UIColor whiteColor];
+        _windowTransform = CGAffineTransformIdentity;
     }
     return self;
 }
 
-- (void)show {
-    NSAssert(_photos.count > 0, @"photos不能为空!");
++ (void)show:(NSUInteger)currentIndex photosCb:(NSArray<WJPhotoObj *> *(^)(WJPhotoBrowser *))photosCb {
+    WJPhotoBrowser *browser = [[self alloc] init];
+    NSArray<WJPhotoObj *> *photos = nil;
+    if (photosCb) {photos =  photosCb(browser);}
+    browser.currentIndex = currentIndex;
+    browser.photos = photos;
+    [browser show];
+}
 
+- (void)show {
+    NSAssert(self.photos.count > 0, @"photos不能为空!");
+    __weak __typeof(&*self) ws = self;
+    [self.photos enumerateObjectsUsingBlock:^(WJPhotoObj * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.firstShow = (idx == ws.currentIndex)?YES:NO;
+    }];
+    
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     [window addSubview:self.view];
     [window.rootViewController addChildViewController:self];
-    window.backgroundColor = [UIColor blackColor];
+    _windowColor = window.backgroundColor;
     _windowTransform = window.transform;
-    
     _toolbar.photos = _photos;
-    _toolbar.currentIndex = _sourceIndex;
+    _toolbar.currentIndex = _currentIndex;
+}
+
+- (void)dismiss {
+    [self.view removeFromSuperview];
+    [self removeFromParentViewController];
+    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+    window.backgroundColor = _windowColor;
 }
 
 - (void)viewDidLoad {
@@ -58,52 +82,39 @@ WJPhotoViewDelegate
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     flow.minimumInteritemSpacing = SPACE;
     flow.itemSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
-    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width + SPACE, [UIScreen mainScreen].bounds.size.height) collectionViewLayout:flow];
-    _collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, SPACE);
-    _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _collectionView.delegate = self;
-    _collectionView.dataSource = self;
-    _collectionView.pagingEnabled = YES;
-    _collectionView.showsHorizontalScrollIndicator = NO;
-    _collectionView.showsVerticalScrollIndicator = NO;
-    _collectionView.backgroundColor = [UIColor clearColor];
-    [_collectionView registerClass:[WJPhotoView class] forCellWithReuseIdentifier:cellID];
-    [self.view addSubview:_collectionView];
-    
-    self.view.backgroundColor = [UIColor blackColor];
-    self.view.alpha = 0.0;
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width + SPACE, [UIScreen mainScreen].bounds.size.height) collectionViewLayout:flow];
+    collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, SPACE);
+    collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    collectionView.delegate = self;
+    collectionView.dataSource = self;
+    collectionView.pagingEnabled = YES;
+    collectionView.showsHorizontalScrollIndicator = NO;
+    collectionView.showsVerticalScrollIndicator = NO;
+    collectionView.backgroundColor = [UIColor clearColor];
+    [collectionView registerClass:[WJPhotoView class] forCellWithReuseIdentifier:cellID];
+    [self.view addSubview:collectionView];
+    self.collectionView = collectionView;
     
     CGFloat barHeight = 44;
     CGFloat barWidth = self.view.frame.size.width;
     CGFloat barY = self.view.frame.size.height - barHeight;
-    _toolbar = [[WJPhotoToolbar alloc] initWithFrame:CGRectMake(0, barY, barWidth, barHeight)];
-    _toolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:_toolbar];
+    WJPhotoToolbar *toolbar = [[WJPhotoToolbar alloc] initWithFrame:CGRectMake(0, barY, barWidth, barHeight)];
+    toolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:toolbar];
     
     __weak __typeof(_collectionView) weakCollectionView = _collectionView;
-    _toolbar.saveImage = ^ (NSUInteger index){
+    toolbar.saveImage = ^ (NSUInteger index){
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
         WJPhotoView *cell = (WJPhotoView *)[weakCollectionView cellForItemAtIndexPath:indexPath];
         [cell saveImage];
     };
-}
-
-- (UIImage *)getImageFromView:(UIView *)view {
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, 0.0);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+    self.toolbar = toolbar;
 }
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     if (!_photos.count) return;
-    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_sourceIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_currentIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -113,9 +124,10 @@ WJPhotoViewDelegate
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     WJPhotoView *photoView = [collectionView dequeueReusableCellWithReuseIdentifier:cellID forIndexPath:indexPath];
     WJPhotoObj *photo = _photos[indexPath.item];
-    photoView.delegate = self;
     photoView.browser = self;
     photoView.photo = photo;
+    __weak __typeof(&*self) ws = self;
+    photoView.dismiss = ^ {[ws dismiss];};
     return photoView;
 }
 
@@ -123,13 +135,6 @@ WJPhotoViewDelegate
     // update tool bar
     NSUInteger page = scrollView.contentOffset.x / scrollView.bounds.size.width;
     _toolbar.currentIndex = page;
-}
-
-- (void)dismissPhotoBrowser:(WJPhotoView *)photoView {
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
-    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-    window.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -141,6 +146,7 @@ WJPhotoViewDelegate
     NSLog(@"%s", __func__);
     _collectionView.delegate = nil;
     _collectionView.dataSource = nil;
+    _windowColor = nil;
 }
 
 @end

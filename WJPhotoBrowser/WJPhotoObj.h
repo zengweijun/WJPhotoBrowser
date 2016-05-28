@@ -10,11 +10,18 @@
 #import <UIKit/UIKit.h>
 
 @interface WJPhotoObj : NSObject
-@property (copy, nonatomic) NSString *photoURL; // webURL/fileURL
 
-@property (strong, nonatomic) UIImage *placeholder;
+// Must set properties
+/** It's web URL、file URL or local image name */
+@property (copy  , nonatomic) NSString    *photoURL;
+
+/** It's the view that contain image object */
 @property (strong, nonatomic) UIImageView *sourceImageView;
-@property (assign, nonatomic) BOOL isFirstShow;
-@property (assign, nonatomic) NSUInteger photoIndex;
+
+
+// Optional set properties
+@property (strong, nonatomic) UIImage *placeholder;
+@property (assign, nonatomic) BOOL     firstShow;
+
 
 @end

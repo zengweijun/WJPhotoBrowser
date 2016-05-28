@@ -2,160 +2,208 @@
 //  WJPhotoView.m
 //  WJPhotoBrowser
 //
-//  Created by 曾维俊 on 16/2/17.
+//  Created by 曾维俊 on 16/5/26.
 //  Copyright © 2016年 曾维俊. All rights reserved.
 //
 
-#define kRatio .98
-
 #import "WJPhotoView.h"
-#import "WJTapDetectingImageView.h"
-#import "WJTapDetectingView.h"
-#import "UIImageView+WebCache.h"
-#import "WJPhotoObj.h"
 #import "WJPhotoBrowser.h"
-#import "MBProgressHUD.h"
+#import "WJPhotoObj.h"
+#import <UIImageView+WebCache.h>
+#import <MBProgressHUD.h>
+#import <POP.h>
 
-@interface WJPhotoView() <
-UIScrollViewDelegate,
-WJTapDetectingViewDelegate,
-WJTapDetectingImageViewDelegate
-> {
-    WJTapDetectingView *_tapView;
-    WJTapDetectingImageView *_photoImageView;
-    UIScrollView *_zoomScrollView;
-    UIViewController *_topViewController;
-    
-    UIView *_interruptView; // 防止图片未加载完成时发生browser重复创建的情况
-}
+#define WJPhotoViewAnimationDuration 0.4
+#define kRatio .96
 
-@property (strong, nonatomic) UIImage *showImage;
+@interface WJPhotoView() <UIScrollViewDelegate, UIGestureRecognizerDelegate>
+@property (nonatomic, weak) UIImageView             *imageView;
+@property (nonatomic, weak) UIScrollView            *zoomScrollView;
+@property (nonatomic, weak) UIActivityIndicatorView *indicatorView;
+@property (nonatomic, weak) UIWindow                *keyWindow;
+
+@property (nonatomic, strong) UIViewController      *topViewController;
+
+@property (nonatomic, assign) BOOL imageDownloadComplete;
+@property (nonatomic, assign) BOOL performingLayout;
+@property (nonatomic, assign) BOOL scrollViewEndDragging;
+@property (nonatomic, assign) BOOL performingTapGesture;
+@property (nonatomic, assign) BOOL showWebImage;
+
+@property (nonatomic, assign) CGPoint startDragginCenter;
 
 @end
 
 @implementation WJPhotoView
-
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if (self = [super initWithCoder:aDecoder]) {
-        [self commitInit];
-    }
-    return self;
-}
-
+#pragma mark - Initialize
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        [self commitInit];
+        UIScrollView *zoomScrollView = [[UIScrollView alloc] init];
+        zoomScrollView.delegate = self;
+        zoomScrollView.showsHorizontalScrollIndicator = NO;
+        zoomScrollView.showsVerticalScrollIndicator = NO;
+        zoomScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
+        zoomScrollView.backgroundColor = [UIColor clearColor];
+        zoomScrollView.frame = self.bounds;
+        zoomScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        zoomScrollView.alwaysBounceVertical = YES;
+        [self.contentView addSubview:zoomScrollView];
+        
+        // Gesture
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+        [zoomScrollView addGestureRecognizer:singleTap];
+        UITapGestureRecognizer * doubleTap = [[UITapGestureRecognizer alloc]
+                                              initWithTarget:self
+                                              action:@selector(handleDoubleTap:)];
+        doubleTap.numberOfTapsRequired = 2;
+        [singleTap requireGestureRecognizerToFail:doubleTap];
+        [zoomScrollView addGestureRecognizer:doubleTap];
+        self.zoomScrollView = zoomScrollView;
+        
+        UIImageView *imageView = [[UIImageView alloc] init];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.backgroundColor = [UIColor clearColor];
+        [zoomScrollView addSubview:imageView];
+        imageView.frame = zoomScrollView.bounds;
+        self.imageView = imageView;
+        
+        UIView *view = [[UIApplication sharedApplication].windows lastObject];
+        UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        indicatorView.frame = CGRectMake(0, 0, 40, 40);
+        indicatorView.alpha = 0.0;
+        [view addSubview:indicatorView];
+        self.indicatorView = indicatorView;
     }
     return self;
 }
 
-- (void)commitInit {
-    _zoomScrollView = [[UIScrollView alloc] init];
-    _zoomScrollView.delegate = self;
-    _zoomScrollView.showsHorizontalScrollIndicator = NO;
-    _zoomScrollView.showsVerticalScrollIndicator = NO;
-    _zoomScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
-    _zoomScrollView.backgroundColor = [UIColor clearColor];
-    _zoomScrollView.frame = self.bounds;
-    _zoomScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.contentView addSubview:_zoomScrollView];
-    
-    _tapView = [[WJTapDetectingView alloc] initWithFrame:_zoomScrollView.bounds];
-    _tapView.tapDelegate = self;
-    _tapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [_zoomScrollView addSubview:_tapView];
-    
-    _photoImageView = [[WJTapDetectingImageView alloc] initWithFrame:CGRectZero];
-    _photoImageView.tapDelegate = self;
-    _photoImageView.contentMode = UIViewContentModeScaleAspectFit;
-    _photoImageView.backgroundColor = [UIColor clearColor];
-    [_zoomScrollView addSubview:_photoImageView];
-    
-    UIWindow *window = [self getWindow];
-    _interruptView = [[UIView alloc] initWithFrame:window.bounds];
-    _interruptView.backgroundColor = [UIColor clearColor];
-    _interruptView.userInteractionEnabled = YES;
-    [_interruptView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(interruptViewTap:)]];
-    
-    UISwipeGestureRecognizer *swip = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(interruptViewSwip:)];
-    swip.direction =
-    UISwipeGestureRecognizerDirectionUp|
-    UISwipeGestureRecognizerDirectionDown;
-    [_interruptView addGestureRecognizer:swip];
-    
-    [window addSubview:_interruptView];
+#pragma mark - IndicatorView
+- (void)showIndicatorView {[self.indicatorView startAnimating];}
+- (void)hideIndicatorView {[self.indicatorView stopAnimating];}
+
+#pragma mark - UIScrollViewDelegate
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
+    return self.imageView;
 }
 
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.scrollViewEndDragging = NO;
+    self.startDragginCenter = scrollView.center;
+    [self hideSourceImageView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    CGFloat viewHalfHeight = scrollView.bounds.size.height / 2;
+    if(scrollView.center.y > viewHalfHeight+40 ||
+       scrollView.center.y < viewHalfHeight-40) {
+        // Automatic Dismiss View
+        [self handleSingleTap:nil];
+    } else {
+        // Continue Showing View
+        [UIView animateWithDuration:WJPhotoViewAnimationDuration
+                         animations:^{
+            self.browser.view.backgroundColor = [UIColor colorWithWhite:0 alpha:1];
+            [scrollView setCenter:self.startDragginCenter];
+        } completion:^(BOOL finished) {
+            [self showSourceImageView];
+        }];
+    }
+    self.scrollViewEndDragging = YES;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.zoomScale != scrollView.minimumZoomScale) return;
+    if (self.performingLayout) return;
+    if (scrollView.contentOffset.y != 0 &&
+        !self.scrollViewEndDragging &&
+        !self.performingTapGesture) {
+        [self panGsr:scrollView];
+    }
+}
+
+#pragma mark - Gesture recognizer handle
+- (void)panGsr:(UIScrollView *)scrollView {
+    CGFloat viewHeight = scrollView.frame.size.height;
+    CGFloat viewHalfHeight = viewHeight/2;
+    
+    UIPanGestureRecognizer *panGsr = scrollView.panGestureRecognizer;
+    CGPoint translatedPoint = [panGsr translationInView:scrollView];
+
+    translatedPoint = CGPointMake(self.startDragginCenter.x+translatedPoint.x, self.startDragginCenter.y+translatedPoint.y);
+    [scrollView setCenter:translatedPoint];
+    
+    CGFloat newY = scrollView.center.y - viewHalfHeight;
+    CGFloat newAlpha = 1 - fabs(newY)/viewHeight; //abs(newY)/viewHeight * 1.8;
+    self.browser.view.opaque = YES;
+    self.browser.view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:newAlpha];
+}
+
+- (void)handleDoubleTap:(UITapGestureRecognizer *)gsr {
+    self.performingTapGesture = YES;
+    if (self.zoomScrollView.zoomScale != self.zoomScrollView.minimumZoomScale) {
+        [self.zoomScrollView setZoomScale:self.zoomScrollView.minimumZoomScale animated:YES];
+    } else {
+        CGFloat newZoomScale = (self.zoomScrollView.maximumZoomScale + self.zoomScrollView.minimumZoomScale) / 2;
+        CGFloat xSize = self.bounds.size.width / newZoomScale;
+        CGFloat ySize = self.bounds.size.height / newZoomScale;
+        CGPoint touchPoint = [gsr locationInView:self.imageView];
+        [self.zoomScrollView zoomToRect:CGRectMake(touchPoint.x - xSize / 2, touchPoint.y - ySize / 2, xSize, ySize) animated:YES];
+    }
+    self.performingTapGesture = NO;
+}
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)gsr {
+    self.performingTapGesture = YES;
+    __weak __typeof(&*self) ws = self;
+    CGRect destRect = [self.imageView convertRect:self.imageView.bounds toView:nil];
+    [self maskImageView:[self maskImageView:destRect] animationToFrame:[self sourceRect] backgroudAlpha:0.0 completion:^{
+        if (ws.dismiss) ws.dismiss();
+    }];
+    [self hideAll];
+    self.performingTapGesture = NO;
+}
+
+#pragma mark - Layout
 - (void)setPhoto:(WJPhotoObj *)photo {
     _photo = photo;
     
-    [self adjustFrame];
-    
-    __weak __typeof(self) ws = self;
-    UIImage *placeholder = photo.placeholder?photo.placeholder:[self getImageFromView:photo.sourceImageView];
-    [_photoImageView sd_setImageWithURL:[NSURL URLWithString:photo.photoURL] placeholderImage:placeholder completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        [ws adjustFrame];
-        [ws setNeedsLayout];
-        [ws setNeedsDisplay];
-        ws.showImage = image;
-    }];
-}
-
-- (void)prepareForReuse {
-    [super prepareForReuse];
-    self.showImage = nil;
-}
-
-- (void)saveImage {
-    if (!self.showImage) {
-        [self showError:@"图片还没有下载完成!"];
-        return;
-    }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        UIImageWriteToSavedPhotosAlbum(self.showImage, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
-    });
-}
-
-- (void)showError:(NSString *)text {
-    UIView *view = [[UIApplication sharedApplication].windows lastObject];
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
-    hud.labelText = text;
-    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[NSString stringWithFormat:@"MBProgressHUD.bundle/%@", @"+++error.png"]]];
-    hud.mode = MBProgressHUDModeCustomView;
-    hud.animationType = MBProgressHUDAnimationZoom;
-    hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:0.7];
-}
-
-- (void)showSuccess {
-    UIView *view = [[UIApplication sharedApplication].windows lastObject];
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
-    hud.labelText = @"图片已保存";
-    hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[NSString stringWithFormat:@"MBProgressHUD.bundle/%@", @"+++error.png"]]];
-    hud.mode = MBProgressHUDModeCustomView;
-    hud.animationType = MBProgressHUDAnimationZoom;
-    hud.removeFromSuperViewOnHide = YES;
-    [hud hide:YES afterDelay:0.7];
-}
-
-- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    if (error) {
-        [self showError:@"保存失败"];
+    self.imageDownloadComplete = NO;
+    self.showWebImage = [photo.photoURL hasPrefix:@"http"]?YES:NO;
+    if (!self.showWebImage) {
+        self.imageView.image = [UIImage imageNamed:photo.photoURL];
+        self.imageDownloadComplete = YES;
+        [self hideIndicatorView];
     } else {
-        [self showSuccess];
+        [self showIndicatorView];
+        UIImage *placeholderImage = photo.placeholder?photo.placeholder:[self imageFromView:photo.sourceImageView];
+        [self.imageView sd_setImageWithURL:[NSURL URLWithString:photo.photoURL] placeholderImage:placeholderImage options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+            
+        } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            [self adjustFrame];
+            [self hideIndicatorView];
+            if (error) [self showMessage:@"图片下载失败!"];
+            if (image) self.imageDownloadComplete = YES;
+        }];
     }
+    
+    // 先给imageView布局
+    [self adjustFrame];
 }
 
 - (void)adjustFrame {
-    if (_photoImageView.image == nil) return;
-    
-    [_interruptView removeFromSuperview]; // 来到这里说明有图片存在
-    
+    if (self.imageView.image == nil) return;
+    self.performingLayout = YES;
+
     CGSize  boundsSize = self.bounds.size;
     CGFloat boundsWidth = boundsSize.width;
     CGFloat boundsHeight = boundsSize.height;
     
-    CGSize  imageSize = _photoImageView.image.size;
+    CGSize  imageSize = self.imageView.image.size;
     CGFloat imageWidth = imageSize.width;
     CGFloat imageHeight = imageSize.height;
     // In cass crash
@@ -181,163 +229,100 @@ WJTapDetectingImageViewDelegate
         imageRect.origin.y = 0;
     }
     
-    if (_photo.isFirstShow) {
-        _photo.isFirstShow = NO;
-        
-        CGRect sourceRect = [_photo.sourceImageView convertRect:_photo.sourceImageView.bounds toView:nil];
-        _photoImageView.frame = sourceRect;
-        
-        CGAffineTransform newTransform = CGAffineTransformScale(self.browser.windowTransform, kRatio, kRatio);
-        
-        UIImageView *resizeImageView = [[UIImageView alloc] initWithFrame:sourceRect];
-        resizeImageView.contentMode = _photo.sourceImageView.contentMode;
-        resizeImageView.clipsToBounds = _photo.sourceImageView.clipsToBounds;
-        resizeImageView.image = _photo.sourceImageView.image;
-        [[self getWindow] addSubview:resizeImageView];
-        
-        _photo.sourceImageView.hidden = YES;
+    if (self.photo.firstShow) {
+        self.photo.firstShow = NO;
+        self.browser.view.backgroundColor = [UIColor blackColor];
+        self.browser.view.alpha = 0.0;
+        UIImageView *maskImageView = [self maskImageView:[self sourceRect]];
+        [self zoomInUnderView];
+        [self maskImageView:maskImageView animationToFrame:imageRect backgroudAlpha:1.0 completion:NULL];
+    } else {
+        self.imageView.frame = imageRect;
+    }
+    
+    self.performingLayout = NO;
+}
+
+- (void)maskImageView:(UIImageView *)maskImageView animationToFrame:(CGRect)rect backgroudAlpha:(CGFloat)alpha completion:(void (^)())completion {
+    [self hideSourceImageView];
+    self.imageView.hidden = YES;
+    
+    __weak __typeof(&*self) ws = self;
+    void(^aCompletion)() = ^ {
+        self.indicatorView.alpha = 1.0;
+        self.imageView.hidden = NO;
+        if (!ws.showWebImage) self.imageView.frame = rect;
+        [maskImageView removeFromSuperview];
+        self.indicatorView.center = [self keyWindow].center;
+        if (completion) completion();
+        [self showSourceImageView];
+    };
+    
+    if (self.browser.usePopAnimation) {
         [UIView animateWithDuration:WJPhotoViewAnimationDuration animations:^{
-            resizeImageView.frame = imageRect;
-            _photoImageView.frame = imageRect;
-            self.browser.view.alpha = 1.0;
-            if (self.browser.zoomUnderView) {
-                [[self topViewController].view setTransform:newTransform];
-            }
-        } completion:^(BOOL finished) {
-            _photo.sourceImageView.hidden = NO;
-            [resizeImageView removeFromSuperview];
+            [self adjustBackground:alpha];
+        }];
+        [self popAnimation:maskImageView toFrame:rect completion:^{
+            if (aCompletion) aCompletion();
         }];
     } else {
-        _photoImageView.frame = imageRect;
+        [UIView animateWithDuration:WJPhotoViewAnimationDuration animations:^{
+            maskImageView.frame = rect;
+            [self adjustBackground:alpha];
+        } completion:^(BOOL finished) {
+            if (aCompletion) aCompletion();
+        }];
     }
 }
 
-#pragma mark - scroll view delegate
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    return _photoImageView;
+- (void)adjustBackground:(CGFloat)alpha {
+    self.browser.view.alpha = alpha;
+    if (self.browser.animatedZoomUnderView) (alpha > 0)?[self zoomOutUnderView]:[self zoomInUnderView];
 }
 
-- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
+#pragma mark - pop Animation
+- (void)popAnimation:(UIView *)view toFrame:(CGRect)frame completion:(void (^)(void))completion {
+    POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPViewFrame];
+    [animation setSpringBounciness:6];
+    [animation setDynamicsMass:1];
+    [animation setToValue:[NSValue valueWithCGRect:frame]];
+    [view.layer pop_addAnimation:animation forKey:nil];
+    if (completion) [animation setCompletionBlock:^(POPAnimation *animation, BOOL finished) { completion(); }];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+    // adjust image center
     // Center the image as it becomes smaller than the size of the screen
     CGSize boundsSize = self.bounds.size;
-    CGRect frameToCenter = _photoImageView.frame;
+    CGRect imageFrame = self.imageView.frame;
     
     // Horizontally
-    if (frameToCenter.size.width < boundsSize.width) {
-        frameToCenter.origin.x = floorf((boundsSize.width - frameToCenter.size.width) / 2.0);
+    if (imageFrame.size.width < boundsSize.width) {
+        imageFrame.origin.x = floorf((boundsSize.width - imageFrame.size.width) / 2.0);
     } else {
-        frameToCenter.origin.x = 0;
+        imageFrame.origin.x = 0;
     }
     
     // Vertically
-    if (frameToCenter.size.height < boundsSize.height) {
-        frameToCenter.origin.y = floorf((boundsSize.height - frameToCenter.size.height) / 2.0);
+    if (imageFrame.size.height < boundsSize.height) {
+        imageFrame.origin.y = floorf((boundsSize.height - imageFrame.size.height) / 2.0);
     } else {
-        frameToCenter.origin.y = 0;
+        imageFrame.origin.y = 0;
     }
     
     // Center
-    if (!CGRectEqualToRect(_photoImageView.frame, frameToCenter))
-        _photoImageView.frame = frameToCenter;
-}
-
-#pragma mark - tap InterruptView
-- (void)interruptViewTap:(UITapGestureRecognizer *)tap {
-    [self removePhotoBrowser];
-}
-
-- (void)interruptViewSwip:(UISwipeGestureRecognizer *)swip {
-    [self removePhotoBrowser];
-}
-
-- (void)removePhotoBrowser {
-    [_interruptView removeFromSuperview];
-    if ([self.delegate respondsToSelector:@selector(dismissPhotoBrowser:)]) {
-        [self.delegate dismissPhotoBrowser:self];
-    }
-}
-
-#pragma mark - Tap Detection
-- (void)handleSingleTap:(CGPoint)touchPoint {
-    UIWindow *window = [self getWindow];
-    CGRect sourceRect = [self getSourceRect];
-    _photo.sourceImageView.hidden = YES;
+    if (!CGRectEqualToRect(self.imageView.frame, imageFrame))
+        self.imageView.frame = imageFrame;
     
-    UIImageView *resizeImageView = [[UIImageView alloc] initWithFrame:_photoImageView.frame];
-    resizeImageView.contentMode = _photo.sourceImageView.contentMode;
-    resizeImageView.clipsToBounds = _photo.sourceImageView.clipsToBounds;
-    resizeImageView.image = _photoImageView.image;
-    [window addSubview:resizeImageView];
-    [UIView animateWithDuration:WJPhotoViewAnimationDuration animations:^{
-        self.browser.view.alpha = 0.0;
-        _photoImageView.frame = sourceRect;
-        resizeImageView.frame = sourceRect;
-        if (self.browser.zoomUnderView) {
-            [[self topViewController].view setTransform:self.browser.windowTransform];
-        }
-    } completion:^(BOOL finished) {
-        [resizeImageView removeFromSuperview];
-        if ([self.delegate respondsToSelector:@selector(dismissPhotoBrowser:)]) {
-            [self.delegate dismissPhotoBrowser:self];
-        }
-        _photo.sourceImageView.hidden = NO;
-    }];
-}
-
-- (void)handleDoubleTap:(CGPoint)touchPoint {
-    if (_zoomScrollView.zoomScale != _zoomScrollView.minimumZoomScale) {
-        [_zoomScrollView setZoomScale:_zoomScrollView.minimumZoomScale animated:YES];
-    } else {
-        CGFloat newZoomScale = (_zoomScrollView.maximumZoomScale + _zoomScrollView.minimumZoomScale) / 2;
-        CGFloat xSize = self.bounds.size.width / newZoomScale;
-        CGFloat ySize = self.bounds.size.height / newZoomScale;
-        [_zoomScrollView zoomToRect:CGRectMake(touchPoint.x - xSize / 2, touchPoint.y - ySize / 2, xSize, ySize) animated:YES];
-    }
-}
-
-// Image View
-- (void)imageView:(UIImageView *)imageView singleTapDetected:(CGPoint)touchPoint {
-    [self handleSingleTap:touchPoint];
-}
-
-- (void)imageView:(UIImageView *)imageView doubleTapDetected:(CGPoint)touchPoint {
-    [self handleDoubleTap:touchPoint];
-}
-
-// Background View
-- (void)view:(UIView *)view singleTapDetected:(CGPoint)touchPoint {
-    // Translate touch location to image view location
-    CGFloat touchX = touchPoint.x;
-    CGFloat touchY = touchPoint.y;
-    touchX *= 1/_zoomScrollView.zoomScale;
-    touchY *= 1/_zoomScrollView.zoomScale;
-    touchX += _zoomScrollView.contentOffset.x;
-    touchY += _zoomScrollView.contentOffset.y;
-    [self handleSingleTap:CGPointMake(touchX, touchY)];
-}
-
-- (void)view:(UIView *)view doubleTapDetected:(CGPoint)touchPoint {
-    // Translate touch location to image view location
-    CGFloat touchX = touchPoint.x;
-    CGFloat touchY = touchPoint.y;
-    touchX *= 1/_zoomScrollView.zoomScale;
-    touchY *= 1/_zoomScrollView.zoomScale;
-    touchX += _zoomScrollView.contentOffset.x;
-    touchY += _zoomScrollView.contentOffset.y;
-    [self handleDoubleTap:CGPointMake(touchX, touchY)];
+    self.performingLayout = NO;
 }
 
 #pragma mark - Getter
 - (UIViewController *)topViewController {
     if (!_topViewController) {
-        UIWindow *window = [self getWindow];
+        UIWindow *window = [self keyWindow];
         UIViewController *topViewController = window.rootViewController;
         while (topViewController.presentedViewController) {
             topViewController = topViewController.presentedViewController;
@@ -347,11 +332,22 @@ WJTapDetectingImageViewDelegate
     return _topViewController;
 }
 
-- (UIWindow *)getWindow {
-    return [[[UIApplication sharedApplication] delegate] window];
+- (UIWindow *)keyWindow {
+    if (!_keyWindow) {
+        _keyWindow = [UIApplication sharedApplication].keyWindow;
+    }
+    return _keyWindow;
 }
 
-- (UIImage*)getImageFromView:(UIView *)view {
+- (CGRect)sourceRect {
+    CGRect rect;
+    [self zoomInUnderView];
+    rect = [self.photo.sourceImageView convertRect:self.photo.sourceImageView.bounds toView:nil];
+    [self zoomOutUnderView];
+    return rect;
+}
+
+- (UIImage*)imageFromView:(UIView *)view {
     UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, 2);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
@@ -359,24 +355,60 @@ WJTapDetectingImageViewDelegate
     return image;
 }
 
-- (CGRect)getSourceRect {
-    CGAffineTransform curTransform = [self topViewController].view.transform;
-    if (self.browser.zoomUnderView) {
-        [[self topViewController].view setTransform:self.browser.windowTransform];
-    }
-    
-    CGRect rect = [_photo.sourceImageView convertRect:_photo.sourceImageView.bounds toView:nil];
-    if (self.browser.zoomUnderView) {
-        [[self topViewController].view setTransform:curTransform];
-    }
-    return rect;
+- (UIImageView *)maskImageView:(CGRect)rect {
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:rect];
+    imageView.contentMode = self.photo.sourceImageView.contentMode;
+    imageView.clipsToBounds = self.photo.sourceImageView.clipsToBounds;
+    imageView.image = self.imageView.image;
+    [[self keyWindow] addSubview:imageView];
+    return imageView;
 }
 
-- (void)dealloc {
-    [_photoImageView sd_setImageWithURL:[NSURL URLWithString:@"cancelRequest"]];
-    self.delegate = nil;
-    NSLog(@"%s", __func__);
+- (CGAffineTransform)origWindowTransform {return [self keyWindow].transform;}
+- (CGAffineTransform)destWindowTransform {return CGAffineTransformScale([self origWindowTransform], kRatio, kRatio);}
+
+#pragma mark - save image
+- (void)saveImage {
+    if (!self.imageDownloadComplete) {
+        [self showMessage:@"图片还没有下载完成!"];
+        return;
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIImageWriteToSavedPhotosAlbum(self.imageView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+    });
 }
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    error?[self showMessage:@"保存失败"]:[self showMessage:@"图片已保存"];
+}
+
+#pragma mark - helper
+- (void)showMessage:(NSString *)text {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.imageView animated:YES];
+    hud.labelText = text;
+    hud.mode = MBProgressHUDModeCustomView;
+    hud.animationType = MBProgressHUDAnimationZoom;
+    hud.removeFromSuperViewOnHide = YES;
+    [hud hide:YES afterDelay:0.7];
+}
+
+- (void)hideAll {
+    [MBProgressHUD hideHUDForView:self animated:YES];
+    [self hideIndicatorView];
+    [self.imageView sd_setImageWithURL:[NSURL URLWithString:@"cancel the task"]];
+}
+
+- (void)zoomOutUnderView {[self.keyWindow.rootViewController.view setTransform:[self destWindowTransform]];}
+- (void)zoomInUnderView {[self.keyWindow.rootViewController.view setTransform:[self origWindowTransform]];}
+
+- (void)hideSourceImageView {self.photo.sourceImageView.hidden = YES;}
+- (void)showSourceImageView {self.photo.sourceImageView.hidden = NO;}
+
+- (void)dealloc {[self hideAll];};
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    self.imageDownloadComplete = NO;
+    [self hideAll];
+}
 
 @end

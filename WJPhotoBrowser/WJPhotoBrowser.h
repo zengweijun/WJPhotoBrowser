@@ -10,14 +10,20 @@
 #import "WJPhotoObj.h"
 
 @interface WJPhotoBrowser : UIViewController
-@property (assign, nonatomic) NSUInteger sourceIndex;
-@property (strong, nonatomic) NSArray *photos;
+@property (assign, nonatomic) NSUInteger currentIndex;
+@property (strong, nonatomic) NSArray<WJPhotoObj *> *photos;
 
-@property (assign, nonatomic) BOOL zoomUnderView;
+// The background view is need to zoom animation when browser show, defaults is 'YES'.
+@property (assign, nonatomic) BOOL animatedZoomUnderView;
+
+/* 
+  The image is displayed with pop animation, defaults is 'NO'.
+  Note:if sourceImageView's image and this image that need to show are the same, you
+        shuould to set the property in that better experience.
+ */
+@property (assign, nonatomic) BOOL usePopAnimation;
 
 - (void)show;
-
-#pragma mark - private
-@property (assign, nonatomic, readonly) CGAffineTransform windowTransform;
++ (void)show:(NSUInteger)currentIndex photosCb:(NSArray<WJPhotoObj *> *(^)(WJPhotoBrowser *browser))photosCb;
 
 @end
