@@ -9,9 +9,9 @@
 #import "WJPhotoView.h"
 #import "WJPhotoBrowser.h"
 #import "WJPhotoObj.h"
-#import <UIImageView+WebCache.h>
-#import <MBProgressHUD.h>
-#import <POP.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <MBProgressHUD/MBProgressHUD.h>
+#import <pop/POP.h>
 
 #define WJPhotoViewAnimationDuration 0.4
 #define kRatio .96
