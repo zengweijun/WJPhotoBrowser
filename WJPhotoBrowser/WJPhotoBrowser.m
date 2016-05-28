@@ -23,7 +23,6 @@ UICollectionViewDelegateFlowLayout
 @property (nonatomic, weak) UICollectionView *collectionView;
 @property (nonatomic, weak) WJPhotoToolbar   *toolbar;
 
-@property (nonatomic, assign) CGAffineTransform windowTransform;
 @property (nonatomic, strong) UIColor *windowColor;
 
 @end
@@ -37,7 +36,6 @@ UICollectionViewDelegateFlowLayout
         _animatedZoomUnderView = YES;
         
         _windowColor = [UIColor whiteColor];
-        _windowTransform = CGAffineTransformIdentity;
     }
     return self;
 }
@@ -62,9 +60,9 @@ UICollectionViewDelegateFlowLayout
     [window addSubview:self.view];
     [window.rootViewController addChildViewController:self];
     _windowColor = window.backgroundColor;
-    _windowTransform = window.transform;
     _toolbar.photos = _photos;
     _toolbar.currentIndex = _currentIndex;
+    window.backgroundColor = [UIColor blackColor];
 }
 
 - (void)dismiss {

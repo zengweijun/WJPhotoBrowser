@@ -174,7 +174,7 @@
     
     self.imageDownloadComplete = NO;
     self.showWebImage = [photo.photoURL hasPrefix:@"http"]?YES:NO;
-    if (!self.showWebImage) {
+    if (!self.showWebImage && photo.photoURL.length) {
         self.imageView.image = [UIImage imageNamed:photo.photoURL];
         self.imageDownloadComplete = YES;
         [self hideIndicatorView];
@@ -186,7 +186,7 @@
         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             [self adjustFrame];
             [self hideIndicatorView];
-            if (error) [self showMessage:@"图片下载失败!"];
+            if (error) [self showMessage:@"图片加载失败!"];
             if (image) self.imageDownloadComplete = YES;
         }];
     }
