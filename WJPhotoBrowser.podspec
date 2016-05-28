@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.resources = "WJPhotoBrowser/images/*.png"
   s.framework  = "UIKit"
   s.requires_arc = true
-  s.dependency 'SDWebImage', '~> 3.7.2'
-  s.dependency 'MBProgressHUD', '~> 0.9.1'
-  s.dependency 'pop'
+  s.dependency "SDWebImage"
+  s.dependency "MBProgressHUD"
+  s.dependency "pop"
 end
