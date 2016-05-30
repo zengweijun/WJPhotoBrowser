@@ -21,8 +21,6 @@ UICollectionViewDelegateFlowLayout
 >
 
 @property (nonatomic, weak) UICollectionView *collectionView;
-@property (nonatomic, weak) WJPhotoToolbar   *toolbar;
-
 @property (nonatomic, strong) UIColor *windowColor;
 
 @end
@@ -60,8 +58,8 @@ UICollectionViewDelegateFlowLayout
     [window addSubview:self.view];
     [window.rootViewController addChildViewController:self];
     _windowColor = window.backgroundColor;
-    _toolbar.photos = _photos;
-    _toolbar.currentIndex = _currentIndex;
+    self.toolbar.photos = _photos;
+    self.toolbar.currentIndex = _currentIndex;
     window.backgroundColor = [UIColor blackColor];
 }
 
@@ -132,7 +130,7 @@ UICollectionViewDelegateFlowLayout
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     // update tool bar
     NSUInteger page = scrollView.contentOffset.x / scrollView.bounds.size.width;
-    _toolbar.currentIndex = page;
+    self.toolbar.currentIndex = page;
 }
 
 - (void)didReceiveMemoryWarning {

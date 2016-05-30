@@ -6,8 +6,14 @@
 //  Copyright © 2016年 曾维俊. All rights reserved.
 //
 
-@interface WJPhotoBrowser (wj_private)
-@property (assign, nonatomic) CGAffineTransform windowTransform;
+
+#import "WJPhotoToolbar.h"
+
+@interface WJPhotoBrowser ()
+
+@property (nonatomic, weak) WJPhotoToolbar *toolbar;
+
+//@property (assign, nonatomic) CGAffineTransform windowTransform;
 
 @end
 

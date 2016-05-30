@@ -12,6 +12,7 @@
 #import "UIImageView+WebCache.h"
 #import "MBProgressHUD.h"
 #import "POP.h"
+#import "WJPhotoBrowserPrivate.h"
 
 #define WJPhotoViewAnimationDuration 0.4
 #define kRatio .96
@@ -111,6 +112,7 @@
             [scrollView setCenter:self.startDragginCenter];
         } completion:^(BOOL finished) {
             [self showSourceImageView];
+            self.browser.toolbar.alpha = 1.0;
         }];
     }
     self.scrollViewEndDragging = YES;
@@ -118,11 +120,13 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (scrollView.zoomScale != scrollView.minimumZoomScale) return;
-    if (self.performingLayout) return;
-    if (scrollView.contentOffset.y != 0 &&
-        !self.scrollViewEndDragging &&
-        !self.performingTapGesture) {
-        [self panGsr:scrollView];
+    if (self.performingLayout||self.scrollViewEndDragging||self.performingTapGesture) return;
+    if (scrollView.contentOffset.y < 0) [self panGsr:scrollView];
+    if (scrollView.contentOffset.y > 0) {
+        CGFloat boundsHeight = [UIScreen mainScreen].bounds.size.height;
+        CGFloat contentHeight = scrollView.contentSize.height;
+        CGFloat tempValue = boundsHeight - contentHeight;
+        if ((scrollView.contentOffset.y + tempValue) > 0) [self panGsr:scrollView];
     }
 }
 
@@ -141,6 +145,7 @@
     CGFloat newAlpha = 1 - fabs(newY)/viewHeight; //abs(newY)/viewHeight * 1.8;
     self.browser.view.opaque = YES;
     self.browser.view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:newAlpha];
+    self.browser.toolbar.alpha = 0.0;
 }
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)gsr {
