@@ -52,6 +52,7 @@
     // Block type
     [WJPhotoBrowser show:currentIndex photosCb:^NSArray<WJPhotoObj *> *(WJPhotoBrowser *browser) {
         browser.usePopAnimation = YES;
+        //browser.slidingCloseGesture = NO;
         
         // 返回数据源数组
         NSMutableArray *photos = [NSMutableArray array];

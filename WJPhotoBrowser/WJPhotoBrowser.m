@@ -32,6 +32,7 @@ UICollectionViewDelegateFlowLayout
         _currentIndex = 0;
         _usePopAnimation = NO;
         _animatedZoomUnderView = YES;
+        _slidingCloseGesture = YES;
         
         _windowColor = [UIColor whiteColor];
     }

@@ -19,9 +19,9 @@
 @property (strong, nonatomic) UIImageView *sourceImageView;
 
 
-// Optional set properties
+
+// Optional set properties, avoid to set if not must
 @property (strong, nonatomic) UIImage *placeholder;
 @property (assign, nonatomic) BOOL     firstShow;
-
 
 @end

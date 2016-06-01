@@ -16,6 +16,7 @@
 
 #define WJPhotoViewAnimationDuration 0.4
 #define kRatio .96
+#define kLimitHeightDissmiss 60
 
 @interface WJPhotoView() <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, weak) UIImageView             *imageView;
@@ -93,15 +94,17 @@
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if (!self.browser.slidingCloseGesture) return;
     self.scrollViewEndDragging = NO;
     self.startDragginCenter = scrollView.center;
     [self hideSourceImageView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!self.browser.slidingCloseGesture) return;
     CGFloat viewHalfHeight = scrollView.bounds.size.height / 2;
-    if(scrollView.center.y > viewHalfHeight+40 ||
-       scrollView.center.y < viewHalfHeight-40) {
+    if(scrollView.center.y > viewHalfHeight+kLimitHeightDissmiss ||
+       scrollView.center.y < viewHalfHeight-kLimitHeightDissmiss) {
         // Automatic Dismiss View
         [self handleSingleTap:nil];
     } else {
@@ -119,6 +122,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (!self.browser.slidingCloseGesture) return;
     if (scrollView.zoomScale != scrollView.minimumZoomScale) return;
     if (self.performingLayout||self.scrollViewEndDragging||self.performingTapGesture) return;
     if (scrollView.contentOffset.y < 0) [self panGsr:scrollView];
@@ -142,7 +146,8 @@
     [scrollView setCenter:translatedPoint];
     
     CGFloat newY = scrollView.center.y - viewHalfHeight;
-    CGFloat newAlpha = 1 - fabs(newY)/viewHeight; //abs(newY)/viewHeight * 1.8;
+    CGFloat newAlpha = 1 - fabs(newY)/viewHeight * 3.8; // fabs(newY)/viewHeight;
+    newAlpha = newAlpha >= 0.3? newAlpha: 0.3;
     self.browser.view.opaque = YES;
     self.browser.view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:newAlpha];
     self.browser.toolbar.alpha = 0.0;

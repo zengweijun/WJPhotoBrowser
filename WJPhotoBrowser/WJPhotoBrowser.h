@@ -23,6 +23,11 @@
  */
 @property (assign, nonatomic) BOOL usePopAnimation;
 
+/*
+  Add this gesture can be made easier for the user to close this photo browser, defaults is 'YES'
+ */
+@property (nonatomic, assign) BOOL slidingCloseGesture;
+
 - (void)show;
 + (void)show:(NSUInteger)currentIndex photosCb:(NSArray<WJPhotoObj *> *(^)(WJPhotoBrowser *browser))photosCb;
 
