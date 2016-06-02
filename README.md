@@ -14,3 +14,9 @@
     * 手动导入：
     * 将`WJPhotoBrowser`文件夹中的所有文件拽入项目中
     * 导入主头文件：`#import "WJPhotoBrowser.h"`
+
+##Animation Display
+
+![fade](https://github.com/ZengWeiJun/Resource/blob/master/WJPhotoBrowser/1.gif)
+
+
