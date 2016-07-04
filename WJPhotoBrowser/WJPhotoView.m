@@ -184,8 +184,10 @@
     
     self.imageDownloadComplete = NO;
     self.showWebImage = [photo.photoURL hasPrefix:@"http"]?YES:NO;
-    if (!self.showWebImage && photo.photoURL.length) {
-        self.imageView.image = [UIImage imageNamed:photo.photoURL];
+    if (!self.showWebImage) {
+        self.imageView.image = [UIImage imageNamed:photo.photoURL]
+        ?[UIImage imageNamed:photo.photoURL]
+        : [self imageFromView:photo.sourceImageView];
         self.imageDownloadComplete = YES;
         [self hideIndicatorView];
     } else {

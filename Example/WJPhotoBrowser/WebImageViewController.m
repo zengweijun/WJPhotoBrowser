@@ -43,13 +43,16 @@ static NSString *thumbImageUrl = @"http://testimg.isenba.com/upload/20160331/2_1
     [self.imageViews enumerateObjectsUsingBlock:^(UIImageView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.userInteractionEnabled = YES;
         [obj addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageViewTap:)]];
-        
-        if (idx < 3) {
-            [obj sd_setImageWithURL:[NSURL URLWithString:squareThumbImageUrls()[idx][@"thumb"]]];
-        } else if (idx == 3) {
-            [obj sd_setImageWithURL:[NSURL URLWithString:bigImageUrl]];
-        } else if (idx == 4) {
-            [obj sd_setImageWithURL:[NSURL URLWithString:thumbImageUrl]];
+        switch (idx) {
+            case 3:  // 原图(大)-->原图(大)
+                [obj sd_setImageWithURL:[NSURL URLWithString:bigImageUrl]];
+                break;
+            case 4:  // 原图(小)-->原图(大)
+                [obj sd_setImageWithURL:[NSURL URLWithString:thumbImageUrl]];
+                break;
+            default: // 从正方形缩略图(小)-->原图（大）
+                [obj sd_setImageWithURL:[NSURL URLWithString:squareThumbImageUrls()[idx][@"thumb"]]];
+                break;
         }
         obj.tag = idx;
     }];

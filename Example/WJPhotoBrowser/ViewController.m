@@ -51,6 +51,7 @@
 #else
     // Block type
     [WJPhotoBrowser show:currentIndex photosCb:^NSArray<WJPhotoObj *> *(WJPhotoBrowser *browser) {
+        // Set the browser properties
         browser.usePopAnimation = YES;
         //browser.slidingCloseGesture = NO;
         
