@@ -26,7 +26,9 @@
 		386B4DA51C745A550001E95D /* WJPhotoBrowserUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 386B4DA41C745A550001E95D /* WJPhotoBrowserUITests.m */; };
 		38B2BB6B1CE4B1D100D51C5D /* WJPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2BB5F1CE4B1D100D51C5D /* WJPhotoBrowser.m */; };
 		556EEE121FF0E6E900E7DF12 /* WJPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 556EEE111FF0E6E900E7DF12 /* WJPhoto.m */; };
-		8781A6A2A028ED62B2C1CBCB /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C1433E46FD4D8F0BF62119D8 /* libPods.a */; };
+		57AD540888459E71FAC56D3D /* libPods-WJPhotoBrowserUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC0B7DA6BECD1F2F6A35C1B /* libPods-WJPhotoBrowserUITests.a */; };
+		75FD5D369A4E5AAFCCF0716D /* libPods-WJPhotoBrowser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0896E93DDF2336AD96725D /* libPods-WJPhotoBrowser.a */; };
+		CA52EE105B6476547AA5B4A8 /* libPods-WJPhotoBrowserTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6326FD95B88E6499EC10455 /* libPods-WJPhotoBrowserTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +62,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3784EED7EC0B517C8B5A6C4B /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		2B0896E93DDF2336AD96725D /* libPods-WJPhotoBrowser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WJPhotoBrowser.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		381AB14A1CF69BC100B2C282 /* WebImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebImageViewController.h; sourceTree = "<group>"; };
 		381AB14B1CF69BC100B2C282 /* WebImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebImageViewController.m; sourceTree = "<group>"; };
 		385376931C76F46500FF8120 /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
@@ -93,8 +95,14 @@
 		556EEE051FF0DDFE00E7DF12 /* WJPhotoItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WJPhotoItem.h; sourceTree = "<group>"; };
 		556EEE101FF0E6E900E7DF12 /* WJPhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WJPhoto.h; sourceTree = "<group>"; };
 		556EEE111FF0E6E900E7DF12 /* WJPhoto.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WJPhoto.m; sourceTree = "<group>"; };
-		903EA67E736A93404B2FC6C8 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		C1433E46FD4D8F0BF62119D8 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		62FB35808D2C5BB8F2623439 /* Pods-WJPhotoBrowser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WJPhotoBrowser.release.xcconfig"; path = "Pods/Target Support Files/Pods-WJPhotoBrowser/Pods-WJPhotoBrowser.release.xcconfig"; sourceTree = "<group>"; };
+		89DA774A3518300FECF5140F /* Pods-WJPhotoBrowserUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WJPhotoBrowserUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WJPhotoBrowserUITests/Pods-WJPhotoBrowserUITests.release.xcconfig"; sourceTree = "<group>"; };
+		8B4E6DD3F61821F393020EFD /* Pods-WJPhotoBrowserUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WJPhotoBrowserUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WJPhotoBrowserUITests/Pods-WJPhotoBrowserUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		8DC0B7DA6BECD1F2F6A35C1B /* libPods-WJPhotoBrowserUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WJPhotoBrowserUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6326FD95B88E6499EC10455 /* libPods-WJPhotoBrowserTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WJPhotoBrowserTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA1849F66F63AB961F09C6B0 /* Pods-WJPhotoBrowser.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WJPhotoBrowser.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WJPhotoBrowser/Pods-WJPhotoBrowser.debug.xcconfig"; sourceTree = "<group>"; };
+		DEAC0581FB739FDB290B473A /* Pods-WJPhotoBrowserTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WJPhotoBrowserTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-WJPhotoBrowserTests/Pods-WJPhotoBrowserTests.release.xcconfig"; sourceTree = "<group>"; };
+		EA303CE8CB4DB522CE5F637D /* Pods-WJPhotoBrowserTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WJPhotoBrowserTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WJPhotoBrowserTests/Pods-WJPhotoBrowserTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8781A6A2A028ED62B2C1CBCB /* libPods.a in Frameworks */,
+				75FD5D369A4E5AAFCCF0716D /* libPods-WJPhotoBrowser.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA52EE105B6476547AA5B4A8 /* libPods-WJPhotoBrowserTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,20 +126,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				57AD540888459E71FAC56D3D /* libPods-WJPhotoBrowserUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		32007700318A52E5309635A5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				C1433E46FD4D8F0BF62119D8 /* libPods.a */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		386B4D731C745A550001E95D = {
 			isa = PBXGroup;
 			children = (
@@ -138,8 +140,8 @@
 				386B4D981C745A550001E95D /* WJPhotoBrowserTests */,
 				386B4DA31C745A550001E95D /* WJPhotoBrowserUITests */,
 				386B4D7D1C745A550001E95D /* Products */,
-				BDFAD18BACBC3399D416A803 /* Pods */,
-				32007700318A52E5309635A5 /* Frameworks */,
+				6F05A0AEF3CB03328E0B9F6A /* Pods */,
+				B1BDDE58F2A4F448405D8CDB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -236,13 +238,27 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		BDFAD18BACBC3399D416A803 /* Pods */ = {
+		6F05A0AEF3CB03328E0B9F6A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				903EA67E736A93404B2FC6C8 /* Pods.debug.xcconfig */,
-				3784EED7EC0B517C8B5A6C4B /* Pods.release.xcconfig */,
+				DA1849F66F63AB961F09C6B0 /* Pods-WJPhotoBrowser.debug.xcconfig */,
+				62FB35808D2C5BB8F2623439 /* Pods-WJPhotoBrowser.release.xcconfig */,
+				EA303CE8CB4DB522CE5F637D /* Pods-WJPhotoBrowserTests.debug.xcconfig */,
+				DEAC0581FB739FDB290B473A /* Pods-WJPhotoBrowserTests.release.xcconfig */,
+				8B4E6DD3F61821F393020EFD /* Pods-WJPhotoBrowserUITests.debug.xcconfig */,
+				89DA774A3518300FECF5140F /* Pods-WJPhotoBrowserUITests.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		B1BDDE58F2A4F448405D8CDB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2B0896E93DDF2336AD96725D /* libPods-WJPhotoBrowser.a */,
+				B6326FD95B88E6499EC10455 /* libPods-WJPhotoBrowserTests.a */,
+				8DC0B7DA6BECD1F2F6A35C1B /* libPods-WJPhotoBrowserUITests.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,13 +268,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 386B4DA91C745A550001E95D /* Build configuration list for PBXNativeTarget "WJPhotoBrowser" */;
 			buildPhases = (
-				DDAD010B7281E30C5A9CE963 /* Check Pods Manifest.lock */,
+				7B31407ED02C251B6A33EC0A /* [CP] Check Pods Manifest.lock */,
 				386B4D781C745A550001E95D /* Sources */,
 				386B4D791C745A550001E95D /* Frameworks */,
 				386B4D7A1C745A550001E95D /* Resources */,
 				38C826361CA113D7005F1C05 /* Embed Frameworks */,
-				4E80C446E398A11D08ABFE8E /* Embed Pods Frameworks */,
-				D01C4B6FCD4D74FFB05681EF /* Copy Pods Resources */,
+				54E8CE955DB91CF10C32BB23 /* [CP] Embed Pods Frameworks */,
+				3BB05995FB885C97A6AF20B0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -273,9 +289,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 386B4DAC1C745A550001E95D /* Build configuration list for PBXNativeTarget "WJPhotoBrowserTests" */;
 			buildPhases = (
+				CFF811619DB8909EEC541C76 /* [CP] Check Pods Manifest.lock */,
 				386B4D911C745A550001E95D /* Sources */,
 				386B4D921C745A550001E95D /* Frameworks */,
 				386B4D931C745A550001E95D /* Resources */,
+				C9319F00D9C802F5EFE6B05D /* [CP] Embed Pods Frameworks */,
+				D67BBB4796A3E1BB3085F87E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -291,9 +310,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 386B4DAF1C745A550001E95D /* Build configuration list for PBXNativeTarget "WJPhotoBrowserUITests" */;
 			buildPhases = (
+				D4F3962175315FE1C574DCF3 /* [CP] Check Pods Manifest.lock */,
 				386B4D9C1C745A550001E95D /* Sources */,
 				386B4D9D1C745A550001E95D /* Frameworks */,
 				386B4D9E1C745A550001E95D /* Resources */,
+				6EB38F4E41DDFA8A87530ED1 /* [CP] Embed Pods Frameworks */,
+				FD942E32BF08AB4FDB6E707E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -382,49 +404,148 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4E80C446E398A11D08ABFE8E /* Embed Pods Frameworks */ = {
+		3BB05995FB885C97A6AF20B0 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WJPhotoBrowser/Pods-WJPhotoBrowser-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		D01C4B6FCD4D74FFB05681EF /* Copy Pods Resources */ = {
+		54E8CE955DB91CF10C32BB23 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WJPhotoBrowser/Pods-WJPhotoBrowser-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DDAD010B7281E30C5A9CE963 /* Check Pods Manifest.lock */ = {
+		6EB38F4E41DDFA8A87530ED1 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WJPhotoBrowserUITests/Pods-WJPhotoBrowserUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B31407ED02C251B6A33EC0A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WJPhotoBrowser-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C9319F00D9C802F5EFE6B05D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WJPhotoBrowserTests/Pods-WJPhotoBrowserTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CFF811619DB8909EEC541C76 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WJPhotoBrowserTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D4F3962175315FE1C574DCF3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WJPhotoBrowserUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D67BBB4796A3E1BB3085F87E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WJPhotoBrowserTests/Pods-WJPhotoBrowserTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FD942E32BF08AB4FDB6E707E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WJPhotoBrowserUITests/Pods-WJPhotoBrowserUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -579,7 +700,7 @@
 		};
 		386B4DAA1C745A550001E95D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 903EA67E736A93404B2FC6C8 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = DA1849F66F63AB961F09C6B0 /* Pods-WJPhotoBrowser.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -588,7 +709,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = WJPhotoBrowser/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-Objc",
@@ -602,7 +723,7 @@
 		};
 		386B4DAB1C745A550001E95D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3784EED7EC0B517C8B5A6C4B /* Pods.release.xcconfig */;
+			baseConfigurationReference = 62FB35808D2C5BB8F2623439 /* Pods-WJPhotoBrowser.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -611,7 +732,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = WJPhotoBrowser/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-Objc",
@@ -625,6 +746,7 @@
 		};
 		386B4DAD1C745A550001E95D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA303CE8CB4DB522CE5F637D /* Pods-WJPhotoBrowserTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = WJPhotoBrowserTests/Info.plist;
@@ -637,6 +759,7 @@
 		};
 		386B4DAE1C745A550001E95D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DEAC0581FB739FDB290B473A /* Pods-WJPhotoBrowserTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = WJPhotoBrowserTests/Info.plist;
@@ -649,6 +772,7 @@
 		};
 		386B4DB01C745A550001E95D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B4E6DD3F61821F393020EFD /* Pods-WJPhotoBrowserUITests.debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = WJPhotoBrowserUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -661,6 +785,7 @@
 		};
 		386B4DB11C745A550001E95D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89DA774A3518300FECF5140F /* Pods-WJPhotoBrowserUITests.release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = WJPhotoBrowserUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
