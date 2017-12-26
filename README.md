@@ -18,8 +18,8 @@
 
 ## Usage
 ## 使用介绍:步骤1、2、3、4为必须实现的步骤(对照Demo)
-    * 1.请在此处构造数据源,数据源需遵循 'WJPhotoItem' 协议
 ```
+    // 1.请在此处构造数据源,数据源需遵循 'WJPhotoItem' 协议
     NSMutableArray<id<WJPhotoItem>> *photos = [NSMutableArray<id<WJPhotoItem>> array];
     [imageViews enumerateObjectsUsingBlock:^(UIImageView *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         WJPhoto *photo = [WJPhoto new];
@@ -30,8 +30,8 @@
     }];
 ```
 
-    * 2.展示大图
-    ```
+```
+    // 2.展示大图
     wj_weakify(self)
     WJPhotoBrowser *browser = [WJPhotoBrowser show:photos currentIndex:currentIndex].loadImageCb(^(WJPhotoBrowser *theBrowser, NSUInteger atIndex, UIImageView *imageView, void(^loadFinished)(NSUInteger atIndex, UIImage *image)){
         // __strong __typeof(&*ws) sf = ws;
@@ -56,10 +56,10 @@
 
         // 图片浏览器销毁回调
     });
-    ```
-    
-    * 5.自定义底部条
-    ```
+```
+
+```
+    // 5.自定义底部条
     [browser setSetupToolBar:^UIView *(WJPhotoBrowser *theBrowser, UIView *spuerView) {
         if (theBrowser.photos.count <= 1) {
             return nil;
@@ -80,15 +80,15 @@
         UIPageControl *pageControl = (UIPageControl *)theBrowser.toolBar;
         pageControl.currentPage = atIndex;
     }];
-    ```
-    
-    * 6自定义顶部条
-    ```
+```
+
+```
+    // 6自定义顶部条
     [browser setSetupNavBar:^UIView *(WJPhotoBrowser *theBrowser, UIView *superView) {
         // custom the view and return it
         return nil;
     }];
-    ```
+```
 
 ## License
 WJPhotoBrowser is released under the MIT license. See LICENSE for details.
