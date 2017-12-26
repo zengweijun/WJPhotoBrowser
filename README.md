@@ -19,7 +19,7 @@
 ## Usage
 ## 使用介绍:步骤1、2、3、4为必须实现的步骤(对照Demo)
     * 1.请在此处构造数据源,数据源需遵循 'WJPhotoItem' 协议
-    ```
+```
     NSMutableArray<id<WJPhotoItem>> *photos = [NSMutableArray<id<WJPhotoItem>> array];
     [imageViews enumerateObjectsUsingBlock:^(UIImageView *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         WJPhoto *photo = [WJPhoto new];
@@ -28,7 +28,7 @@
         // ...
         [photos addObject:photo];
     }];
-    ```
+```
 
     * 2.展示大图
     ```
