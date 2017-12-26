@@ -7,28 +7,44 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WJPhotoObj.h"
+#import "WJPhotoItem.h"
 
+#define wj_weakify(var) __weak typeof(var) WJWeak_##var = var;
+#define wj_strongify(var) \
+_Pragma("clang diagnostic push") \
+_Pragma("clang diagnostic ignored \"-Wshadow\"") \
+__strong typeof(var) var = WJWeak_##var; \
+_Pragma("clang diagnostic pop")
+
+@class WJPhotoBrowser;
+typedef void(^WJDidDismissAction)(void);
+typedef void(^WJLongPressAction)(WJPhotoBrowser *theBrowser, NSUInteger atIndex, UIImage *image);
+typedef void(^WJLoadImageAction)(WJPhotoBrowser *theBrowser, NSUInteger atIndex, UIImageView *imageView, void(^loadFinished)(NSUInteger atIndex, UIImage *image));
+
+typedef UIView *(^WJSetupNavBar)(WJPhotoBrowser *theBrowser, UIView *superView);
+typedef UIView *(^WJSetupToolBar)(WJPhotoBrowser *theBrowser, UIView *superView);
+typedef void(^WJPageDidChangeToIndex)(WJPhotoBrowser *theBrowser, NSUInteger atIndex, UIImage *image);
+
+/** 大图查看器，请参照使用步骤 */
 @interface WJPhotoBrowser : UIViewController
-@property (assign, nonatomic) NSUInteger currentIndex;
-@property (strong, nonatomic) NSArray<WJPhotoObj *> *photos;
 
-// The background view is need to zoom animation when browser show, defaults is 'YES'.
-@property (assign, nonatomic) BOOL animatedZoomUnderView;
+@property (nonatomic, weak, readonly) UIView *navBar;
+@property (nonatomic, weak, readonly) UIView *toolBar;
 
-/* 
-  The image is displayed with pop animation, defaults is 'NO'.
-  Note:if sourceImageView's image and this image that need to show are the same, you
-        shuould to set the property in that better experience.
- */
-@property (assign, nonatomic) BOOL usePopAnimation;
-
-/*
-  Add this gesture can be made easier for the user to close this photo browser, defaults is 'YES'
- */
+@property (nonatomic, strong) NSArray<id<WJPhotoItem>> *photos;
+@property (nonatomic, assign) NSUInteger currentIndex;
 @property (nonatomic, assign) BOOL slidingCloseGesture;
+@property (nonatomic, assign) BOOL usePopAnimation;
 
-- (void)show;
-+ (void)show:(NSUInteger)currentIndex photosCb:(NSArray<WJPhotoObj *> *(^)(WJPhotoBrowser *browser))photosCb;
+@property (nonatomic, copy) WJSetupNavBar setupNavBar;
+@property (nonatomic, copy) WJSetupToolBar setupToolBar;
+@property (nonatomic, copy) WJPageDidChangeToIndex pageDidChangeToIndex;
+
++ (WJPhotoBrowser *)show:(NSArray<id<WJPhotoItem>> *)photos currentIndex:(NSUInteger)currentIndex;
+- (WJPhotoBrowser *(^)(WJLongPressAction))longPressCb;
+- (WJPhotoBrowser *(^)(WJLoadImageAction))loadImageCb;
+- (WJPhotoBrowser *(^)(WJDidDismissAction))didDismissCb;
+- (WJPhotoBrowser *)show;
+- (WJPhotoBrowser *)hide;
 
 @end

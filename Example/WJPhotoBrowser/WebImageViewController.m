@@ -11,21 +11,7 @@
 #import "WebImageViewController.h"
 #import <UIImageView+WebCache.h>
 #import "WJPhotoBrowser.h"
-
-static inline NSArray *squareThumbImageUrls(){
-    NSArray *array = @[
-                       @{@"pic":@"http://testimg.isenba.com/upload/20151231/1_1451534440349434-1000-1348.jpg",
-                         @"thumb":@"http://testimg.isenba.com/upload/20151231/1_1451534440349434-400-400.jpg"},
-                       @{@"pic":@"http://testimg.isenba.com/upload/20151231/1_1451534443688732-980-1307.jpg",
-                         @"thumb":@"http://testimg.isenba.com/upload/20151231/1_1451534443688732-400-400.jpg"},
-                       @{@"pic":@"http://testimg.isenba.com/upload/20151231/1_1451534447533754-980-1307.jpg",
-                         @"thumb":@"http://testimg.isenba.com/upload/20151231/1_1451534447533754-400-400.jpg"}
-                       ];
-    return array;
-}
-
-static NSString *bigImageUrl = @"http://testimg.isenba.com/upload/20160308/2_1457438058302737-1000-888.jpg";
-static NSString *thumbImageUrl = @"http://testimg.isenba.com/upload/20160331/2_1459421861489562-372-255.jpg";
+#import "WJPhoto.h"
 
 @interface WebImageViewController ()
 
@@ -37,75 +23,59 @@ static NSString *thumbImageUrl = @"http://testimg.isenba.com/upload/20160331/2_1
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    
     
     [self.imageViews enumerateObjectsUsingBlock:^(UIImageView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         obj.userInteractionEnabled = YES;
         [obj addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageViewTap:)]];
-        switch (idx) {
-            case 3:  // 原图(大)-->原图(大)
-                [obj sd_setImageWithURL:[NSURL URLWithString:bigImageUrl]];
-                break;
-            case 4:  // 原图(小)-->原图(大)
-                [obj sd_setImageWithURL:[NSURL URLWithString:thumbImageUrl]];
-                break;
-            default: // 从正方形缩略图(小)-->原图（大）
-                [obj sd_setImageWithURL:[NSURL URLWithString:squareThumbImageUrls()[idx][@"thumb"]]];
-                break;
-        }
         obj.tag = idx;
+//        [obj sd_setImageWithURL:[NSURL URLWithString:@"imageUrl"] completed:NULL];
     }];
 }
 
 - (void)imageViewTap:(UITapGestureRecognizer *)gsr {
     NSUInteger currentIndex = gsr.view.tag;
-#if 0
-    // Normal type
-    NSMutableArray *photos = [NSMutableArray array];
-    for (NSInteger i = 0; i < self.imageViews.count; i++) {
-        WJPhotoObj *photo = [[WJPhotoObj alloc] init];
-        UIImageView *iv = self.imageViews[i];
-        photo.sourceImageView = iv;
-        if (i < 3) {
-            photo.photoURL = squareThumbImageUrls()[i][@"pic"];
-        } else if (i == 3) {
-            photo.photoURL = bigImageUrl;
-        } else if (i == 4) {
-            photo.photoURL = thumbImageUrl;
-        }
+
+    // 1.请在此处构造数据源,数据源需遵循 'WJPhotoItem' 协议
+    NSMutableArray<id<WJPhotoItem>> *photos = [NSMutableArray<id<WJPhotoItem>> array];
+    [self.imageViews enumerateObjectsUsingBlock:^(UIImageView *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        WJPhoto *photo = [WJPhoto new];
+        photo.sourceImageView = obj;
         [photos addObject:photo];
-    }
-    
-    WJPhotoBrowser *browser = [[WJPhotoBrowser alloc] init];
-    browser.currentIndex = currentIndex;
-    browser.photos = photos;
-    [browser show];
-    
-#else
-    // Block type
-    [WJPhotoBrowser show:currentIndex photosCb:^NSArray<WJPhotoObj *> *(WJPhotoBrowser *browser) {
-//        browser.usePopAnimation = YES;
-        
-        // 返回数据源数组
-        NSMutableArray *photos = [NSMutableArray array];
-        for (NSInteger i = 0; i < self.imageViews.count; i++) {
-            WJPhotoObj *photo = [[WJPhotoObj alloc] init];
-            UIImageView *iv = self.imageViews[i];
-            photo.sourceImageView = iv;
-            if (i < 3) {
-                photo.photoURL = squareThumbImageUrls()[i][@"pic"];
-            } else if (i == 3) {
-                photo.photoURL = bigImageUrl;
-            } else if (i == 4) {
-                photo.photoURL = thumbImageUrl;
-            }
-            [photos addObject:photo];
-        }
-        return photos;
     }];
-#endif
+    
+    // 2.展示大图
+     wj_weakify(self);
+    [WJPhotoBrowser show:photos currentIndex:currentIndex].loadImageCb(^(WJPhotoBrowser *theBrowser, NSUInteger atIndex, UIImageView *imageView, void(^loadFinished)(NSUInteger atIndex, UIImage *image)){
+        wj_strongify(self)
+        // __strong __typeof(&*ws) sf = ws;
+        
+        // 3.加载图片(选择各自模块的加载方式)。eg.
+        uint64_t seconds = 0;
+        WJPhoto *photo = theBrowser.photos[atIndex];
+        if (photo.firstShow) {
+            seconds = 2;
+        }
+        NSString *path = [self imageUrls][atIndex];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(seconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            UIImage *image = [UIImage imageWithContentsOfFile:path];
+            
+            // 4.加载完成后请回调
+            loadFinished(atIndex, image);
+        });
+    });
 }
 
+- (NSArray<NSString *> *)imageUrls {
+    return @[
+             [[NSBundle mainBundle] pathForResource:@"0" ofType:@"png"],
+             [[NSBundle mainBundle] pathForResource:@"1" ofType:@"png"],
+             [[NSBundle mainBundle] pathForResource:@"2" ofType:@"png"],
+             [[NSBundle mainBundle] pathForResource:@"3" ofType:@"png"],
+             [[NSBundle mainBundle] pathForResource:@"4" ofType:@"png"],
+             [[NSBundle mainBundle] pathForResource:@"5" ofType:@"png"],
+             [[NSBundle mainBundle] pathForResource:@"6" ofType:@"png"]
+             ];
+}
 
 @end

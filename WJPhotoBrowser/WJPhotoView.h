@@ -7,15 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WJPhotoItem.h"
 
-@class WJPhotoBrowser, WJPhotoObj;
+@class WJPhotoBrowser;
 @interface WJPhotoView : UICollectionViewCell
+@property (nonatomic, weak, readonly) UIImageView *imageView;
+@property (nonatomic, weak) WJPhotoBrowser *browser;
+@property (nonatomic, strong) id<WJPhotoItem> photo;
+@property (nonatomic, assign) NSUInteger index;
+@property (nonatomic, copy) void(^dismiss)(void);
+@property (nonatomic, copy) void(^longPressCb)(WJPhotoView *thePhotoView, UIImage *image);
+@property (nonatomic, copy) void(^loadImageCb)(WJPhotoView *thePhotoView, UIImageView *imageView, void(^loadFinished)(NSUInteger atIndex, UIImage *image));
 
-@property (weak, nonatomic) WJPhotoBrowser *browser;
-@property (strong, nonatomic) WJPhotoObj *photo;
-
-@property (nonatomic, copy) void(^dismiss)();
-
-- (void)saveImage;
+- (void)hidePhotoBrowser;
 
 @end
+
+UIKIT_EXTERN NSString *const kWJPhotoBrowserShouldUpdateStatusBar;
