@@ -90,5 +90,8 @@
     }];
 ```
 
+## Demo
+    *如果Demo报错无法运行，打开终端cd到该项目Example文件夹，更新pod，使用命令运行`$pod install` 或者 `$pod update`
+
 ## License
 WJPhotoBrowser is released under the MIT license. See LICENSE for details.

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "WJPhotoBrowser"
-  s.version      = "1.2.1"
+  s.version      = "1.2.2"
   s.summary      = "A simple and easy to use image browser."
   s.homepage     = "https://github.com/ZengWeiJun/WJPhotoBrowser"
   s.license      = "MIT"

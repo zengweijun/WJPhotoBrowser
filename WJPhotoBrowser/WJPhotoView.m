@@ -307,6 +307,7 @@
         imageRect.origin.y = 0;
     }
     
+    self.imageView.frame = imageRect;
     if (self.photo.firstShow) {
         self.photo.firstShow = NO;
         self.browser.view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.0];
@@ -316,10 +317,6 @@
             wj_strongify(self)
             [self setStatusBarHidden:YES animation:NO];
         }];
-    } else {
-        if (!CGRectEqualToRect(self.imageView.frame, imageRect)) {
-            self.imageView.frame = imageRect;
-        }
     }
     
     self.performingLayout = NO;
@@ -358,12 +355,10 @@
     void(^aCompletion)(void) = ^ {
         self.indicatorView.alpha = 1.0;
         self.imageView.hidden = NO;
-        self.imageView.frame = rect;
         [maskImageView removeFromSuperview];
         self.indicatorView.center = [self keyWindow].center;
         if (completion) completion();
         [self showSourceImageView];
-        [self adjustImageCenter];
     };
     
     if (self.browser.usePopAnimation) {
